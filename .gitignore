@@ -1,9 +1,6 @@
 open-webui
 
-
-#extraction/**
-#!extraction/*.py
+ollama/
 **/*.html
 **/*.dat
 **/*.tok
-
