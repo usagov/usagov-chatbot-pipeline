@@ -12,6 +12,9 @@ There is a need to have a local-only LLM environment to experiment in a manner w
 
 ```
 docker compose up ### :)
+
+docker exec -it ollama-backend bash
+ollama pull llama3.2
 ```
 
 See [docker-compose.yml](docker-compose.yml)
