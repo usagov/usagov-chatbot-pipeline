@@ -44,7 +44,7 @@ on the HTML elements containing crucial text, and writing just that text into da
 The data files created by the extraction script are processed through various common tokenizers, which
 translate human-readable text into formats understandable by the target LLM.
 
-
+A shotgun approach was taken with regard to tokenizers, as it's unclear which will be "best" for ingestion into the model. [tokenize_extracted_text.py](tokenize_extracted_text.py)
 
 ## Ingesting the tokenized data into the LLM
 
