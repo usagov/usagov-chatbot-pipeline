@@ -4,6 +4,7 @@ USAgov has created a small team to implement a proof of concept application for 
 This document will outline steps taken to stand up a development environment to support the import of the USA.gov html files into a local-only LLM.
 
 ## Considerations for proof of concept implementation
+1. This information is meant to be used from a DevOps perspective, therefore tools and tactics will be command-line-centric (MacOS, Linux, WSL2 should all work similarly)
 1. The POC should be kept "lean and mean", in order to get a working demo as soon as possible
 1. The model and environment must be small enough to reside on a standard USA.gov developer workstation
 1. The data must be kept local-only, meaning no online AI services should be used
