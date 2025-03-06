@@ -8,6 +8,15 @@ There is a need to have a local-only LLM environment to experiment in a manner w
 
 ### Installation
 
+#### Updated method:
+
+```
+docker compose up ### :)
+```
+
+See [docker-compose.yml](docker-compose.yml)
+
+#### Original Method Used
 Docker was used to host these components as containers.  Docker was installed natively on WSL2, and Docker Desktop was used on MacOS.
 
 ```
