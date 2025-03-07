@@ -4,6 +4,7 @@ USAgov has created a small team to implement a proof of concept application for 
 This document will outline steps taken to stand up a development environment to support the import of the USA.gov html files into a local-only LLM.
 
 ## Considerations for proof of concept implementation
+
 1. This information is meant to be used from a DevOps perspective, therefore tools and tactics will be command-line-centric (MacOS, Linux, WSL2 should all work similarly)
 1. The POC should be kept "lean and mean", in order to get a working demo as soon as possible
 1. The model and environment must be small enough to reside on a standard USA.gov developer workstation
@@ -18,8 +19,8 @@ There are many tools/methods available for setting up a local dev environment fo
 The tools chosen for this POC were Open-WebUI and Ollama.  There are also a plethora of 
 Python tools for performing work on LLM tasks.  Quite a few were used to implement the pipeline.
 
-1. [Install Open-WebUI and Ollama](Local%20installation%20of%20Open-WebUI%20and%20Ollama.md)
-1. [Update python version and libraries for LLM processing](Python%20Setup%20for%20LLM.md)
+1. [Install Open-WebUI and Ollama](Documentation/Local%20installation%20of%20Open-WebUI%20and%20Ollama.md)
+1. [Update python version and libraries for LLM processing](Documentation/Python%20Setup%20for%20LLM.md)
 
 ## Asking the model about the steps needed to import custom data into itself
 
@@ -27,7 +28,7 @@ The term for augmenting a model with custom (e.g. domain-specific) data is _Retr
 
 Once the local model was installed and working, the following prompt was supplied: _"How can I import documents into my local ollama model to enable Retrieval-augmented Generation?"_
 
-The link to it's answer is [Llama 3.2 explains implementing RAG in a local environment](Llama%203.2%20explains%20implementing%20RAG%20in%20a%20local%20environment.md)
+The link to it's answer is [Llama 3.2 explains implementing RAG in a local environment](Documentation/Llama%203.2%20explains%20implementing%20RAG%20in%20a%20local%20environment.md)
 
 The answers it provided were used to navigate the steps listed below.
 
