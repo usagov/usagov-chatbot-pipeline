@@ -9,15 +9,14 @@ from pathlib import Path
 import re
 import os
 
-"""
-Find an office near you:
-Contact:
-Website:
-Phone number:
-Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.
-SHARE THIS PAGE:
-LAST UPDATED: November 7, 2024
-"""
+skip_text = [
+    "Find an office near you:",
+    "Contact:",
+    "Website:",
+    "Phone number:",
+    "Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.",
+    "SHARE THIS PAGE:",
+    "LAST UPDATED:" ]
 
 # Name the css classes which are most likely to contain useful text
 css_classes = ['usa-prose', 'usa-card__body', 'life-events-item-content',
@@ -53,7 +52,9 @@ for html_file in html_files:
     # ping user
     print("Processing to '" + output_file + "'")
 
+    items_written = 0
     # open the receiving file, before we start processing the input file
+    check_duplicates = []
     with open(output_file, 'w', encoding='utf-8') as ofile:
         soup = BeautifulSoup(html_cont, 'html.parser')
 
@@ -68,13 +69,23 @@ for html_file in html_files:
             # iterate over each sub-element
             for i in items_of_interest:
                 s = i.get_text()
+                if s not in check_duplicates:
+                    check_duplicates.append(s)
+                    # remove boilerplate text
+                    process = True
+                    for skip in skip_text:
+                        if s.startswith(skip):
+                            process = False
+                    if process:
+                        # cleanup whitespace, etc
+                        s = re.sub(r"\s+|\r+|\n+|\t+", " ", s)
+                        s.join(s.split())
+                        # write to output file
+                        print(s, file=ofile)
+                        items_written += 1
 
-                # cleanup whitespace, etc
-                s = re.sub(r"\s+|\r+|\n+|\t+", " ", s)
-                s.join(s.split())
-
-                # write to output file
-                print(s, file=ofile)
-
-        # close output file before proceeding to the next input file
-        ofile.close()
+    # close output file before proceeding to the next input file
+    ofile.close()
+    if items_written == 0:
+        print("No data written for '" + output_file + "'. Removing file")
+        os.remove(output_file)
