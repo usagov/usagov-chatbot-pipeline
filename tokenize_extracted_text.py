@@ -12,7 +12,6 @@ from transformers import BertTokenizer, GPT2Tokenizer
 bert_tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 gpt2_tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
-
 root_path = '.'
 in_path = root_path + '/output'
 out_path = root_path + '/tokens'

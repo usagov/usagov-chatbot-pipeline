@@ -3,10 +3,21 @@
 # the relevant data from each html file, without the html stuff - just a line
 # of text for each relevant html element
 
+
 from bs4 import BeautifulSoup
 from pathlib import Path
 import re
 import os
+
+"""
+Find an office near you:
+Contact:
+Website:
+Phone number:
+Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.
+SHARE THIS PAGE:
+LAST UPDATED: November 7, 2024
+"""
 
 # Name the css classes which are most likely to contain useful text
 css_classes = ['usa-prose', 'usa-card__body', 'life-events-item-content',
