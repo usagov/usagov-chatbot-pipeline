@@ -46,19 +46,24 @@ pyenv global 3.9.8
 sudo apt install cargo
 
 python3 -m pip install --upgrade pip
-python3 -m pip install torch
-python3 -m pip install pandas
-python3 -m pip install bs4
-python3 -m pip install tiktoken
-python3 -m pip install nltk
-python3 -m nltk.downloader all
-python3 -m pip install transformers
-python3 -m pip install git+https://github.com/huggingface/transformers
-python3 -m pip install git+https://github.com/huggingface/accelerate
-python3 -m pip install huggingface_hub
-python3 -m pip install sentencepiece
+#python3 -m pip install torch
+#python3 -m pip install pandas
+#python3 -m pip install bs4
+#python3 -m pip install tiktoken
+#python3 -m pip install nltk
+#python3 -m nltk.downloader all
+#python3 -m pip install transformers
+#python3 -m pip install git+https://github.com/huggingface/transformers
+#python3 -m pip install git+https://github.com/huggingface/accelerate
+#python3 -m pip install huggingface_hub
+#python3 -m pip install sentencepiece
 python3 -m pip install bitsandbytes
-python3 -m pip install haystack-ai
-python3 -m pip install sentence-transformers
+#python3 -m pip install haystack-ai
+#python3 -m pip install sentence-transformers
 python3 -m pip install datasets
+#python3 -m pip install langchain
+#python3 -m pip install llama_index-llms
+python3 -m pip install ollama
+python3 -m pip install chromadb
+python3 -m pip install --platform pysqlite3-binary
 ```

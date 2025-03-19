@@ -29,10 +29,14 @@ prompt = (
     #
     f"Do not provide any data, or make any suggestions unless it comes from the "
     f"following resources: {relateddocs}."
-    f"Additionally, can you please let me know how to display the document file names used for the answer you gave?"
+
+    # Apparently, the answer cannot be traced back to it's input files?  If not, then we'll need to think about how to provide
+    # links in the responses.
+    # f"Additionally, can you please let me know how to display the document file names used for the answer you gave?"
+    # f"Additionally, please include the names of the files of the documents from the resources provided used in your answer. "
 )
 
-ragoutput = ollama.generate(model="llama3.2", prompt=prompt, stream=False)
+ragoutput = ollama.generate(model="llama3.2", prompt=prompt, stream=False, options={"temperature": 0})
 print(f"Answered using only data from USAgov site pages:\n{ragoutput['response']}")
 
 print("---")
