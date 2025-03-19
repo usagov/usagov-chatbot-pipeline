@@ -1,7 +1,6 @@
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
 import chromadb, ollama
 
 chromaclient = chromadb.HttpClient(host="localhost", port=8000)
@@ -15,8 +14,5 @@ prompt = f"{query} - Answer that question using the following text as a resource
 
 noragoutput = ollama.generate(model="llama3.2", prompt=query, stream=False)
 print(f"Answered without RAG: {noragoutput['response']}")
-print("---")
 
-#ragoutput = ollama.generate(model="llama3.2", prompt=prompt, stream=False)
-#
-#print(f"Answered with RAG: {ragoutput['response']}")
+print("---")

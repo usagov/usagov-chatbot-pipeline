@@ -16,7 +16,7 @@ skip_text = [
     "Phone number:",
     "Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.",
     "SHARE THIS PAGE:",
-    "LAST UPDATED:" ]
+    "LAST UPDATED:"]
 
 # Name the css classes which are most likely to contain useful text
 css_classes = ['usa-prose', 'usa-card__body', 'life-events-item-content',

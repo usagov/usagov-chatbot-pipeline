@@ -3,19 +3,36 @@ import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import chromadb, ollama
 
-cli = chromadb.HttpClient(host="localhost", port=8000)
-col = cli.get_or_create_collection(name="buildragwithpython")
+chromaclient = chromadb.HttpClient(host="localhost", port=8000)
+collection = chromaclient.get_or_create_collection(name="buildragwithpython")
 
 query = " ".join(sys.argv[1:])
-embed = ollama.embed(model="nomic-embed-text", input=query)['embeddings']
+queryembed = ollama.embed(model="nomic-embed-text", input=query)['embeddings']
 
-rels = '\n\n'.join(col.query(query_embeddings=embed)['documents'][0])
-prompt = f"{query} - Answer that question using ONLY the resources provided.  Do not provide any data, or make any suggestions unless it comes from the following resources: {rels}"
+relateddocs = '\n\n'.join(collection.query(query_embeddings=queryembed)['documents'][0])
+prompt = (
+    f"{query} - Answer that question using ONLY the resources provided. "
 
-# noragoutput = ollama.generate(model="llama3.2", prompt=query, stream=False)
-# print(f"Answered without RAG: {noragoutput['response']}")
-# print("---")
+    # Things not to tell the AI:
+    # f"Please provide as verbose an answer as is possible, using the resources provided. " <-- this lead to flowery, antiquated language
+    #
+
+    # Things to tell the AI to avoid:
+    f"Please avoid saying things similar to 'not enough data' and 'there is no further information'"
+    f"Do not admit ignorance of other data, even if there is more data available, "
+    f"outside of the resources provided. "
+
+    # Things to tell the AI to do:
+    f"Please keep the answer factual, and avoid superlatives or unnecessary adjectives. "
+
+    # Finally, give it our resources:
+    #
+    f"Do not provide any data, or make any suggestions unless it comes from the "
+    f"following resources: {relateddocs}."
+    f"Additionally, can you please let me know how to display the document file names used for the answer you gave?"
+)
 
 ragoutput = ollama.generate(model="llama3.2", prompt=prompt, stream=False)
+print(f"Answered using only data from USAgov site pages:\n{ragoutput['response']}")
 
-print(f"Answered with RAG: {ragoutput['response']}")
+print("---")
