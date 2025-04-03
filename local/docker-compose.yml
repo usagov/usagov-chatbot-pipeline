@@ -1,23 +1,25 @@
 services:
-  chromadb:
-    image: chromadb/chroma:0.6.3
-    container_name: chromadb
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./chroma:/chroma/chroma
-    restart: always
-    networks:
-      - gsa-gov
-    
+
   ollama-backend:
     image: ollama/ollama
     ports:
       - "11434:11434"
     volumes:
-      - ./ollama:/root/.ollama
+      - ./services/ollama:/root/.ollama
+      - ./zscaler_cert:/tmp/zscaler_cert
     restart: always
     container_name: ollama-backend
+    networks:
+      - gsa-gov
+
+  chromadb:
+    image: chromadb/chroma:0.6.2
+    container_name: chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/chroma:/chroma/chroma
+    restart: always
     networks:
       - gsa-gov
 
@@ -25,6 +27,8 @@ services:
     image: ghcr.io/open-webui/open-webui:dev
     ports:
       - "3000:8080"
+    volumes:
+      - ./services/openweb-ui:/openweb-ui
     environment:
       - OLLAMA_API_BASE_URL=http://ollama-backend:11434/api
     depends_on:

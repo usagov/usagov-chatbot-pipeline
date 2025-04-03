@@ -1,7 +1,64 @@
-open-webui/
-chroma/
-chroma-data/
-ollama/
+
+# Any output from tokenizers, text extractors, web content
 **/*.html
 **/*.dat
 **/*.tok
+
+# Docker compose artifacts
+/local/services/*
+!/local/services/.gitkeep
+/output/*
+!/output/.gitkeep
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+**/*.tfstate
+**/*.tfstate.*
+
+# ???
+# Terraform dependancy lock file. Supposedly best practice to omit this file
+# from the repo - I'm not convinced though... The contents of this article
+# https://build5nines.com/should-terraform-lock-hcl-file-be-added-to-gitignore-or-committed-to-git-repo/
+# seems to me like this is something to be KEPT - similar to composer.lock
+# ???
+**/.terraform.lock.hcl
+
+# Crash log files
+**/crash.log
+**/crash.*.log
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+**/*.plan
+**/*.tfplan
+
+# Exclude all .tfvars files, which are likely to contain sensitive data, such as
+# password, private keys, and other secrets. These should not be part of version 
+# control as they are data points which are potentially sensitive and subject 
+# to change depending on the environment.
+**/*.tfvars
+**/*.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+**/override.tf
+**/override.tf.json
+**/*_override.tf
+**/*_override.tf.json
+
+# Ignore CLI configuration files
+**/.terraformrc
+**/terraform.rc
+
+#keys, certs
+**/*.crt
+**/*.cert
+**/*.pem
+
+# rando
+**/*.gz
+**/*.tar
+**/*.z
+**/*.zip
+**/*.sql
