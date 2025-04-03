@@ -1,91 +1,60 @@
+#pylint: disable=missing-module-docstring, line-too-long, invalid-name
+"""
+Parse useful text from USAgov static site html files into files containing
+the relevant data from each html file, without the html stuff - just a line
+of text for each relevant html element
+"""
 
-# Parse useful text from USAgov static site html files into files containing
-# the relevant data from each html file, without the html stuff - just a line
-# of text for each relevant html element
-
-
-from bs4 import BeautifulSoup
-from pathlib import Path
-import re
 import os
+import re
+from bs4 import BeautifulSoup
 
-skip_text = [
+SKIP_TEXT = set([
     "Find an office near you:",
     "Contact:",
     "Website:",
     "Phone number:",
     "Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.",
     "SHARE THIS PAGE:",
-    "LAST UPDATED:"]
+    "LAST UPDATED:"
+])
 
-# Name the css classes which are most likely to contain useful text
-css_classes = ['usa-prose', 'usa-card__body', 'life-events-item-content',
-               'usagov-directory-table']
+CSS_CLASSES = set(['usa-prose', 'usa-card__body', 'life-events-item-content', 'usagov-directory-table'])
 
-root_path = '.'
-in_path = root_path + '/input'
-out_path = root_path + '/output'
+ROOT_PATH = '.'
+INPUT_PATH = os.path.join(ROOT_PATH, 'html')
+OUTPUT_PATH = os.path.join(ROOT_PATH, 'chatbot/output')
 
-# recursively get the path of each html file we want to process for input
+EXCLUDE_DIRS = {'es', 'espanol', 'sites', 'core', 'modules', 'themes', 's3', '_data'}
 html_files = []
-for root, _, files in os.walk(in_path):
+for root, dirs, files in os.walk(INPUT_PATH, topdown=True):
+    dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
     for file in files:
         if file.endswith(".html"):
             html_files.append(os.path.join(root, file))
 
-# iterate over each of the input html files, extracting and writing what we
-# need into a corresponding output file
 for html_file in html_files:
     with open(html_file, 'r', encoding='utf-8') as file:
-        html_cont = file.read()
+        html_content = file.read()
 
-    # each static file in USAgov is named index.html, and lives
-    # in an appropriately named directory.  We want to take that
-    # directory name, and use it as the filename for the output
-    # file, rather than having a directory per output file
-    fin_path, output_file = os.path.split(html_file)
-    path_parts = Path(fin_path).parts
-    page_path = path_parts[-1]
-    output_file, _ = os.path.splitext(output_file)
-    output_file = out_path + '/' + page_path + '.dat'
+    page_path = os.path.split(os.path.split(html_file)[0])[1]
+    output_file = os.path.join(OUTPUT_PATH, page_path + '.dat')
 
-    # ping user
-    print("Processing to '" + output_file + "'")
-
-    items_written = 0
-    # open the receiving file, before we start processing the input file
+    num_items_written = 0
     check_duplicates = []
     with open(output_file, 'w', encoding='utf-8') as ofile:
-        soup = BeautifulSoup(html_cont, 'html.parser')
+        soup = BeautifulSoup(html_content, 'html.parser')
 
-        divs = soup.find_all('div', class_=css_classes)
-        for div in divs:
-            # find all the sub-elements we're interested in
-            paragraphs = div.find_all('p')
-            spans = div.find_all('span')
-            hrefs = div.find_all('href')
-            items_of_interest = paragraphs + spans + hrefs
+        for div in soup.find_all('div', class_=CSS_CLASSES):
+            for item in div.find_all(['p', 'span', 'a']):
+                text = item.get_text()
+                if text not in check_duplicates:
+                    check_duplicates.append(text)
+                    if text not in SKIP_TEXT:
+                        text = re.sub(r"\s+|\r+|\n+|\t+", " ", text)
+                        text = " ".join(text.split())
+                        print(text, file=ofile)
+                        num_items_written += 1
 
-            # iterate over each sub-element
-            for i in items_of_interest:
-                s = i.get_text()
-                if s not in check_duplicates:
-                    check_duplicates.append(s)
-                    # remove boilerplate text
-                    process = True
-                    for skip in skip_text:
-                        if s.startswith(skip):
-                            process = False
-                    if process:
-                        # cleanup whitespace, etc
-                        s = re.sub(r"\s+|\r+|\n+|\t+", " ", s)
-                        s.join(s.split())
-                        # write to output file
-                        print(s, file=ofile)
-                        items_written += 1
-
-    # close output file before proceeding to the next input file
-    ofile.close()
-    if items_written == 0:
-        print("No data written for '" + output_file + "'. Removing file")
+    if num_items_written == 0:
         os.remove(output_file)
