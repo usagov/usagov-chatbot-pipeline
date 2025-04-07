@@ -21,11 +21,15 @@ variable "public_key" {
   default = null
 }
 
-variable "ingress_host" {
+variable "ingress_host_1" {
   type = string
   default = null
 }
 
+variable "ingress_host_2" {
+  type = string
+  default = null
+}
 variable "resource_prefix" {
   type = string
   default = "cbproto"
@@ -34,6 +38,11 @@ variable "resource_prefix" {
 variable "system_ami_ownerid" {
   type = string
   default = "621876497272"
+}
+
+variable "gsa_cidr_1" {
+  type = string
+  default = "159.142.0.0/16"
 }
 #######################################
 
@@ -116,3 +125,29 @@ variable "sub_auto_ip" {
   type = string
   default = true
 }
+
+variable "ingress_cidr_blocks" {
+  description = "List of CIDR blocks for ingress traffic"
+  type = list(object({
+    cidr_block = string
+  }))
+  default = [
+    {cidr_block = "159.142.0.0/16"},
+    {cidr_block = "136.226.4.0/23"},
+    {cidr_block = "136.226.6.0/23"},
+    {cidr_block = "136.226.8.0/23"},
+    {cidr_block = "136.226.10.0/23"},
+    {cidr_block = "136.226.12.0/23"},
+    {cidr_block = "136.226.14.0/23"},
+    {cidr_block = "136.226.16.0/23"},
+    {cidr_block = "136.226.18.0/23"},
+    {cidr_block = "136.226.20.0/23"},
+    {cidr_block = "136.226.22.0/23"},
+    {cidr_block = "165.225.3.0/24"},
+    {cidr_block = "165.225.46.0/24"},
+    {cidr_block = "165.225.48.0/24"}
+]
+}
+
+#    {cidr_block = "98.97.154.149/32"}
+#    {cidr_block = "0.0.0.0/0"}

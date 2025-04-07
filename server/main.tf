@@ -121,14 +121,6 @@ resource "aws_eip" "system_eip" {
   }
 }
 
-resource "aws_eip" "system_secondary_eip" {
-  domain     = "vpc"
-  depends_on = [aws_internet_gateway.internet_gateway]
-  tags = {
-    Name = "system_secondary_eip"
-  }
-}
-
 # Terraform Data Block - Ubuntu Server 24.04 LTS (HVM), SSD Volume Type, x86_64
 #data "aws_ami" "ubuntu_2404" {
 #  most_recent = true
@@ -207,6 +199,12 @@ resource "aws_security_group" "allow_egress" {
   }
 }
 
+resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress" {
+    security_group_id = aws_security_group.allow_egress.id
+    ip_protocol = -1
+    cidr_ipv4 = "0.0.0.0/0"
+}
+
 resource "aws_security_group" "allow_https" {
   name = "https_inbound"
   description = "Allow inbound on tcp/443"
@@ -215,20 +213,6 @@ resource "aws_security_group" "allow_https" {
     Name = "allow_https"
     Purpose = "HTTPS Access"
   }
-}
-resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" {
-    security_group_id = aws_security_group.allow_https.id
-    from_port = 443
-    to_port = 443
-    ip_protocol = "tcp"
-    cidr_ipv4 = "${var.ingress_host}/32"
-}
-resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress-https" {
-  security_group_id = aws_security_group.allow_https.id
-  from_port = 443
-  to_port = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = "0.0.0.0/0"
 }
 
 resource "aws_security_group" "allow_ssh" {
@@ -240,22 +224,6 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ssh" {
-    security_group_id = aws_security_group.allow_ssh.id
-    from_port = 22
-    to_port = 22
-    ip_protocol = "tcp"
-    cidr_ipv4 = "${var.ingress_host}/32"
-    #cidr_ipv4   = "0.0.0.0/0"
-}
-resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress-ssh" {
-  security_group_id = aws_security_group.allow_ssh.id
-  from_port = 22
-  to_port = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = "0.0.0.0/0"
-}
-
 resource "aws_security_group" "allow_chroma" {
   name        = "allow_chroma"
   description = "Allows Chroma traffic"
@@ -264,23 +232,6 @@ resource "aws_security_group" "allow_chroma" {
     Name = "allow_chroma"
   }
 }
-
-resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
-    security_group_id = aws_security_group.allow_chroma.id
-    from_port = 8000
-    to_port = 8000
-    ip_protocol = "tcp"
-    cidr_ipv4 = "${var.ingress_host}/32"
-    #cidr_ipv4   = "0.0.0.0/0"
-}
-resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress-chroma" {
-  security_group_id = aws_security_group.allow_chroma.id
-  from_port = 8000
-  to_port = 8000
-  ip_protocol = "tcp"
-  cidr_ipv4   = "0.0.0.0/0"
-}
-
 
 resource "aws_security_group" "allow_ollama" {
   name        = "allow_ollama"
@@ -291,27 +242,44 @@ resource "aws_security_group" "allow_ollama" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
-    security_group_id = aws_security_group.allow_ollama.id
-    from_port = 11434
-    to_port = 11434
+resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" {
+    count = length(var.ingress_cidr_blocks)
+    #security_group_id = aws_security_group.this.id
+    security_group_id = aws_security_group.allow_https.id
+    from_port = 443
+    to_port = 443
     ip_protocol = "tcp"
-    cidr_ipv4 = "${var.ingress_host}/32"
-    #cidr_ipv4   = "0.0.0.0/0"
+    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
-resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress-ollama" {
-  security_group_id = aws_security_group.allow_ollama.id
-  from_port = 11434
-  to_port = 11434
-  ip_protocol = "tcp"
-  cidr_ipv4   = "0.0.0.0/0"
+resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ssh" {
+    count = length(var.ingress_cidr_blocks)
+    #security_group_id = aws_security_group.this.id
+    security_group_id = aws_security_group.allow_ssh.id
+    from_port = 22
+    to_port = 22
+    ip_protocol = "tcp"
+    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
-
-resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress" {
-    security_group_id = aws_security_group.allow_egress.id
-    ip_protocol = -1
-    cidr_ipv4 = "0.0.0.0/0"
+resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
+    count = length(var.ingress_cidr_blocks)
+    #security_group_id = aws_security_group.this.id
+    security_group_id = aws_security_group.allow_chroma.id
+    from_port = 80
+    to_port = 80
+    #from_port = 8000
+    #to_port = 8000
+    ip_protocol = "tcp"
+    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
+#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
+#    count = length(var.ingress_cidr_blocks)
+#    #security_group_id = aws_security_group.this.id
+#    security_group_id = aws_security_group.allow_ollama.id
+#    from_port = 11434
+#    to_port = 11434
+#    ip_protocol = "tcp"
+#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
+#}
 
 #resource "aws_ebs_volume" "system_volume_srv" {
 #  availability_zone = var.availability_zone
