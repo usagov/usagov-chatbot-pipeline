@@ -1,7 +1,6 @@
 
 data "aws_region" "current" {}
 
-### permission needed: ec2:ImportKeyPair
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
   public_key = var.public_key
@@ -14,19 +13,6 @@ resource "aws_vpc" "vpc" {
   tags = {
     Name        = "${var.resource_prefix}_vpc"
     Terraform   = "true"
-  }
-}
-
-#Deploy the private subnets
-resource "aws_subnet" "private_subnets" {
-  for_each          = var.private_subnets
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, 8, each.value)
-  availability_zone = var.availability_zone
-
-  tags = {
-    Name      = each.key
-    Terraform = "true"
   }
 }
 
@@ -58,31 +44,11 @@ resource "aws_route_table" "public_route_table" {
   }
 }
 
-resource "aws_route_table" "private_route_table" {
-  vpc_id = aws_vpc.vpc.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.id
-  }
-  tags = {
-    Name      = "${var.resource_prefix}_private_rtb"
-    Terraform = "true"
-  }
-}
-
 #Create route table associations
 resource "aws_route_table_association" "public" {
   depends_on     = [aws_subnet.public_subnets]
   route_table_id = aws_route_table.public_route_table.id
   for_each       = aws_subnet.public_subnets
-  subnet_id      = each.value.id
-}
-
-resource "aws_route_table_association" "private" {
-  depends_on     = [aws_subnet.private_subnets]
-  route_table_id = aws_route_table.private_route_table.id
-  for_each       = aws_subnet.private_subnets
   subnet_id      = each.value.id
 }
 
@@ -244,7 +210,6 @@ resource "aws_security_group" "allow_ollama" {
 
 resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" {
     count = length(var.ingress_cidr_blocks)
-    #security_group_id = aws_security_group.this.id
     security_group_id = aws_security_group.allow_https.id
     from_port = 443
     to_port = 443
@@ -253,7 +218,6 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" 
 }
 resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ssh" {
     count = length(var.ingress_cidr_blocks)
-    #security_group_id = aws_security_group.this.id
     security_group_id = aws_security_group.allow_ssh.id
     from_port = 22
     to_port = 22
@@ -262,24 +226,21 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ssh" {
 }
 resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
     count = length(var.ingress_cidr_blocks)
-    #security_group_id = aws_security_group.this.id
     security_group_id = aws_security_group.allow_chroma.id
-    from_port = 80
-    to_port = 80
-    #from_port = 8000
-    #to_port = 8000
+    from_port = 8000
+    to_port = 8000
     ip_protocol = "tcp"
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
-#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
-#    count = length(var.ingress_cidr_blocks)
-#    #security_group_id = aws_security_group.this.id
-#    security_group_id = aws_security_group.allow_ollama.id
-#    from_port = 11434
-#    to_port = 11434
-#    ip_protocol = "tcp"
-#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
-#}
+
+resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
+    count = length(var.ingress_cidr_blocks)
+    security_group_id = aws_security_group.allow_ollama.id
+    from_port = 11434
+    to_port = 11434
+    ip_protocol = "tcp"
+    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
+}
 
 #resource "aws_ebs_volume" "system_volume_srv" {
 #  availability_zone = var.availability_zone

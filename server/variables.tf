@@ -21,15 +21,6 @@ variable "public_key" {
   default = null
 }
 
-variable "ingress_host_1" {
-  type = string
-  default = null
-}
-
-variable "ingress_host_2" {
-  type = string
-  default = null
-}
 variable "resource_prefix" {
   type = string
   default = "cbproto"
@@ -132,6 +123,9 @@ variable "ingress_cidr_blocks" {
     cidr_block = string
   }))
   default = [
+#    {cidr_block = "0.0.0.0/0"}
+#    {cidr_block = "216.234.197.211/32"},
+    {cidr_block = "129.222.3.35/32"},
     {cidr_block = "159.142.0.0/16"},
     {cidr_block = "136.226.4.0/23"},
     {cidr_block = "136.226.6.0/23"},
@@ -148,6 +142,3 @@ variable "ingress_cidr_blocks" {
     {cidr_block = "165.225.48.0/24"}
 ]
 }
-
-#    {cidr_block = "98.97.154.149/32"}
-#    {cidr_block = "0.0.0.0/0"}
