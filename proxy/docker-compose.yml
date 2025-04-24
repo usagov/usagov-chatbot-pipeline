@@ -1,0 +1,16 @@
+services:
+
+  ollama-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - "80:8000"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./services/ollama-proxy:/tmp/host
+    restart: always
+    container_name: ollama-proxy
+    networks:
+      - gsa-gov
+
+networks:
+  gsa-gov:
