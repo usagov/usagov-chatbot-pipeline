@@ -10,6 +10,12 @@
 /output/*
 !/output/.gitkeep
 
+/proxy/services/*
+!/proxy/services/.gitkeep
+
+/proxy/certs/*
+!/proxy/certs/.gitkeep
+
 # Local .terraform directories
 **/.terraform/*
 

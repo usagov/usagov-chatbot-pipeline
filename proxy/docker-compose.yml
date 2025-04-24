@@ -3,14 +3,58 @@ services:
   ollama-proxy:
     image: nginxproxy/nginx-proxy
     ports:
-      - "80:8000"
+      - "80:80"
+      - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./services/ollama-proxy:/tmp/host
-    restart: always
+      - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
     container_name: ollama-proxy
+    networks:
+      - gsa-gov
+
+  ollama-backend:
+    image: ollama/ollama
+    container_name: ollama-backend
+    volumes:
+      - ./services/ollama:/root/.ollama
+      - ./zscaler_cert:/tmp/zscaler_cert
+    expose:
+      - "${OLLAMA_EXPSPORT}"
+    environment:
+      VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
+      WEB_PORTS: "${OLLAMA_HOSTPORT}"
+    networks:
+      - gsa-gov
+
+  chromadb:
+    image: chromadb/chroma:0.6.2
+    container_name: chromadb
+    volumes:
+      - ./services/chroma:/chroma/chroma
+    expose:
+      - "${CHROMA_EXPSPORT}"
+    environment:
+      VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
+      WEB_PORTS: ${CHROMA_HOSTPORT}
     networks:
       - gsa-gov
 
 networks:
   gsa-gov:
+
+#  ollama-openweb-ui:
+#    image: ghcr.io/open-webui/open-webui:dev
+#    container_name: ollama-openweb-ui
+#    volumes:
+#      - ./services/openweb-ui:/openweb-ui
+#    expose:
+#      - "8080"
+#    environment:
+#      - OLLAMA_API_BASE_URL=http://ollama-backend:11434/api
+#      - VIRTUAL_HOST=ow.radon.labs.straypacket.com
+#      - VIRTUAL_PORT=8080
+#    depends_on:
+#      - ollama-backend
+#    restart: always
+#    networks:
+#      - gsa-gov
