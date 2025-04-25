@@ -11,10 +11,14 @@
 !/output/.gitkeep
 
 /proxy/services/*
+!/proxy/.env
+!/proxy/docker-compose.yml
 !/proxy/services/.gitkeep
 
-/proxy/certs/*
-!/proxy/certs/.gitkeep
+/certs/*
+!/certs/docker-compose.yml
+!/certs/services/nginx-cert-gen/host.conf
+
 
 /proxy/letsencrypt/*
 #/proxy/letsencrypt/work/*

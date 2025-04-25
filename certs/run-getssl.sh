@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source .env
+source ../proxy/.env
 
 BASE=/srv/usagov-chatbot-pipeline/proxy
 
