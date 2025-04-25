@@ -16,6 +16,13 @@
 /proxy/certs/*
 !/proxy/certs/.gitkeep
 
+/proxy/letsencrypt/*
+#/proxy/letsencrypt/work/*
+#/proxy/letsencrypt/logs/*
+#!/proxy/letsencrypt/config/.gitkeep
+#!/proxy/letsencrypt/work/.gitkeep
+#!/proxy/letsencrypt/logs/.gitkeep
+
 # Local .terraform directories
 **/.terraform/*
 
