@@ -17,6 +17,7 @@
 
 /certs/*
 !/certs/docker-compose.yml
+!/certs/run-getssl.sh
 !/certs/services/nginx-cert-gen/host.conf
 
 
