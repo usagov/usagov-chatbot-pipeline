@@ -181,6 +181,17 @@ resource "aws_security_group" "allow_https" {
   }
 }
 
+### Allowed - But always redirected to HTTPS
+resource "aws_security_group" "allow_http" {
+  name = "https_inbound"
+  description = "Allow inbound on tcp/80"
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "allow_http"
+    Purpose = "HTTP Access"
+  }
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allows SSH traffic"
@@ -213,6 +224,14 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" 
     security_group_id = aws_security_group.allow_https.id
     from_port = 443
     to_port = 443
+    ip_protocol = "tcp"
+    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
+}
+resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-http" {
+    count = length(var.ingress_cidr_blocks)
+    security_group_id = aws_security_group.allow_http.id
+    from_port = 80
+    to_port = 80
     ip_protocol = "tcp"
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
