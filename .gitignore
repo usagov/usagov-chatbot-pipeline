@@ -72,9 +72,15 @@
 **/*.cert
 **/*.pem
 
-# rando
+# package management files
+**/*.deb
+**/*.rpm
+
+# compressed files
 **/*.gz
 **/*.tar
 **/*.z
 **/*.zip
+
+# Database files
 **/*.sql
