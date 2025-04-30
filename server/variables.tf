@@ -124,7 +124,7 @@ variable "ingress_cidr_blocks" {
   }))
   default = [
 #    {cidr_block = "0.0.0.0/0"}
-    {cidr_block = "143.105.53.7/32"}
+    {cidr_block = "129.222.3.189/32"}
 #    {cidr_block = "159.142.0.0/16"},
 #    {cidr_block = "136.226.4.0/23"},
 #    {cidr_block = "136.226.6.0/23"},
