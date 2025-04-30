@@ -15,11 +15,8 @@
 !/proxy/docker-compose.yml
 !/proxy/services/.gitkeep
 
-/certs/*
-!/certs/docker-compose.yml
-!/certs/run-getssl.sh
-!/certs/services/nginx-cert-gen/host.conf
-
+!/certs/**
+!/certs/nginx/services/**
 
 /proxy/letsencrypt/*
 #/proxy/letsencrypt/work/*
