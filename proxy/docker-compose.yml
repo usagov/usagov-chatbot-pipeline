@@ -1,20 +1,22 @@
 services:
-
-  ollama-proxy:
-    image: nginxproxy/nginx-proxy
+  proxy:
+    image: 'docker.io/jc21/nginx-proxy-manager:latest'
+    container_name: proxy
+    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '81:81'
+      - '443:443'
     volumes:
-      - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs
-    container_name: ollama-proxy
+      - ./services/proxy/data:/data
+      - ./services/proxy/letsencrypt:/etc/letsencrypt
     networks:
       - gsa-gov
 
-  ollama-backend:
+  ollama:
     image: ollama/ollama
-    container_name: ollama-backend
+    container_name: ollama
+    restart: unless-stopped
     volumes:
       - ./services/ollama:/root/.ollama
       - ./zscaler_cert:/tmp/zscaler_cert
@@ -26,9 +28,10 @@ services:
     networks:
       - gsa-gov
 
-  chromadb:
+  chroma:
     image: chromadb/chroma:0.6.2
-    container_name: chromadb
+    container_name: chroma
+    restart: unless-stopped
     volumes:
       - ./services/chroma:/chroma/chroma
     expose:
@@ -39,22 +42,22 @@ services:
     networks:
       - gsa-gov
 
+  openweb:
+    image: ghcr.io/open-webui/open-webui:dev
+    container_name: openweb
+    restart: unless-stopped
+    volumes:
+      - ./services/openweb:/openweb-ui
+    expose:
+      - ${OPENUI_EXPSPORT}
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+      - VIRTUAL_HOST=${OPENUI_HOSTNAME}
+      - VIRTUAL_PORT=${OPENUI_HOSTPORT}
+    depends_on:
+      - ollama
+    networks:
+      - gsa-gov
+
 networks:
   gsa-gov:
-
-#  ollama-openweb-ui:
-#    image: ghcr.io/open-webui/open-webui:dev
-#    container_name: ollama-openweb-ui
-#    volumes:
-#      - ./services/openweb-ui:/openweb-ui
-#    expose:
-#      - "8080"
-#    environment:
-#      - OLLAMA_API_BASE_URL=http://ollama-backend:11434/api
-#      - VIRTUAL_HOST=ow.radon.labs.straypacket.com
-#      - VIRTUAL_PORT=8080
-#    depends_on:
-#      - ollama-backend
-#    restart: always
-#    networks:
-#      - gsa-gov

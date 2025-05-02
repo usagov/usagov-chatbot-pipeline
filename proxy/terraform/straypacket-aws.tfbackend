@@ -1,0 +1,4 @@
+bucket  = "pk.straypacket.com"
+key     = "tf/get-straypacket-certs.tfstate"
+region  = "us-east-2"
+profile = "straypacket"
