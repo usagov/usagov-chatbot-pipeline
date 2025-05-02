@@ -48,7 +48,7 @@ variable "custom_ami_id" {
 
 variable "system_ami_id" {
   type = string
-  default = "ami-04f167a56786e4b09"
+  default = "ami-0ea6a58eec3a99944"
 }
 
 # shared instances
@@ -67,12 +67,12 @@ variable "system_ami_id" {
 
 variable "system_instance_type_primary" {
   type = string
-  default = "t3a.small"
+  default = "t3a.xlarge"
 }
 
 variable "system_instance_type_secondary" {
   type = string
-  default = "t3a.small"
+  default = "t3a.xlarge"
 }
 variable "system_volume_size" {
   type = number
