@@ -11,7 +11,7 @@ services:
       - ./services/proxy/data:/data
       - ./services/proxy/letsencrypt:/etc/letsencrypt
     networks:
-      - gsa-gov
+      - proxy-net
 
   ollama:
     image: ollama/ollama
@@ -26,7 +26,7 @@ services:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
     networks:
-      - gsa-gov
+      - proxy-net
 
   chroma:
     image: chromadb/chroma:0.6.2
@@ -40,7 +40,7 @@ services:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
     networks:
-      - gsa-gov
+      - proxy-net
 
   openweb:
     image: ghcr.io/open-webui/open-webui:dev
@@ -57,7 +57,7 @@ services:
     depends_on:
       - ollama
     networks:
-      - gsa-gov
+      - proxy-net
 
 networks:
-  gsa-gov:
+  proxy-net:
