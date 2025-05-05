@@ -1,6 +1,6 @@
 services:
   proxy:
-    image: 'docker.io/jc21/nginx-proxy-manager:latest'
+    image: 'docker.io/jc21/nginx-proxy-manager:2.12.3'
     container_name: proxy
     restart: unless-stopped
     ports:
@@ -14,7 +14,7 @@ services:
       - proxy-net
 
   ollama:
-    image: ollama/ollama
+    image: ollama/ollama:0.6.8
     container_name: ollama
     restart: unless-stopped
     volumes:
@@ -29,7 +29,7 @@ services:
       - proxy-net
 
   chroma:
-    image: chromadb/chroma:0.6.2
+    image: chromadb/chroma:1.0.8
     container_name: chroma
     restart: unless-stopped
     volumes:
@@ -43,7 +43,7 @@ services:
       - proxy-net
 
   openweb:
-    image: ghcr.io/open-webui/open-webui:dev
+    image: ghcr.io/open-webui/open-webui:git-de0f52b-ollama
     container_name: openweb
     restart: unless-stopped
     volumes:
