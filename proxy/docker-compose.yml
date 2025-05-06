@@ -1,20 +1,20 @@
 services:
 
-  ollama-proxy:
+  proxy:
     image: nginxproxy/nginx-proxy
+    container_name: proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
       - ./certs:/etc/nginx/certs
-    container_name: ollama-proxy
     networks:
-      - gsa-gov
+      - proxy-net
 
-  ollama-backend:
-    image: ollama/ollama
-    container_name: ollama-backend
+  ollama:
+    image: ollama/ollama:0.6.8
+    container_name: ollama
     volumes:
       - ./services/ollama:/root/.ollama
       - ./zscaler_cert:/tmp/zscaler_cert
@@ -24,11 +24,11 @@ services:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
     networks:
-      - gsa-gov
+      - proxy-net
 
   chromadb:
-    image: chromadb/chroma:0.6.2
-    container_name: chromadb
+    image: chromadb/chroma:1.0.8
+    container_name: chroma
     volumes:
       - ./services/chroma:/chroma/chroma
     expose:
@@ -37,24 +37,26 @@ services:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
     networks:
-      - gsa-gov
+      - proxy-net
+
+  openweb:
+    image: ghcr.io/open-webui/open-webui:git-de0f52b-ollama
+    container_name: openweb
+    restart: unless-stopped
+    volumes:
+      - ./services/openweb:/openweb-ui
+    ports:
+      - "${OPENUI_EXPSPORT}:${OPENUI_EXPSPORT}"
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+      - VIRTUAL_HOST=${OPENUI_HOSTNAME}
+      - VIRTUAL_PORT=${OPENUI_HOSTPORT}
+    depends_on:
+      - ollama
+    networks:
+      - proxy-net
 
 networks:
-  gsa-gov:
+  proxy-net:
 
-#  ollama-openweb-ui:
-#    image: ghcr.io/open-webui/open-webui:dev
-#    container_name: ollama-openweb-ui
-#    volumes:
-#      - ./services/openweb-ui:/openweb-ui
-#    expose:
-#      - "8080"
-#    environment:
-#      - OLLAMA_API_BASE_URL=http://ollama-backend:11434/api
-#      - VIRTUAL_HOST=ow.radon.labs.straypacket.com
-#      - VIRTUAL_PORT=8080
-#    depends_on:
-#      - ollama-backend
-#    restart: always
-#    networks:
-#      - gsa-gov
+    
