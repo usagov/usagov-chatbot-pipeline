@@ -1,15 +1,16 @@
 services:
 
   proxy:
-    image: nginxproxy/nginx-proxy
+    image: 'docker.io/jc21/nginx-proxy-manager:2.12.3'
     container_name: proxy
+    restart: unless-stopped
     ports:
       - '80:80'
       - '81:81'
       - '443:443'
     volumes:
-      - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs
+      - ./services/proxy/data:/data
+      - ./services/proxy/letsencrypt:/etc/letsencrypt
     depends_on:
       - ollama
       - chroma
