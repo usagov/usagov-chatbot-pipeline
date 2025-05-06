@@ -20,8 +20,8 @@ services:
     volumes:
       - ./services/ollama:/root/.ollama
       - ./zscaler_cert:/tmp/zscaler_cert
-    expose:
-      - "${OLLAMA_EXPSPORT}"
+    ports:
+      - "${OLLAMA_EXPSPORT}:${OLLAMA_EXPSPORT}"
     environment:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
@@ -34,8 +34,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./services/chroma:/chroma/chroma
-    expose:
-      - "${CHROMA_EXPSPORT}"
+    ports:
+      - "${CHROMA_EXPSPORT}:${CHROMA_EXPSPORT}"
     environment:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
@@ -48,8 +48,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./services/openweb:/openweb-ui
-    expose:
-      - ${OPENUI_EXPSPORT}
+    ports:
+      - "${OPENUI_EXPSPORT}:${OPENUI_EXPSPORT}"
     environment:
       - OLLAMA_API_BASE_URL=http://ollama:11434/api
       - VIRTUAL_HOST=${OPENUI_HOSTNAME}
