@@ -10,6 +10,10 @@ services:
     volumes:
       - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
       - ./certs:/etc/nginx/certs
+    depends_on:
+      - ollama
+      - chroma
+      - openweb
     networks:
       - proxy-net
 
@@ -25,9 +29,6 @@ services:
     environment:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
-    depends_on:
-      - ollama
-      - chroma
     networks:
       - proxy-net
 
