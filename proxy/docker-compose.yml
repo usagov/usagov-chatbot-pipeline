@@ -25,6 +25,9 @@ services:
     environment:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
+    depends_on:
+      - ollama
+      - chroma
     networks:
       - proxy-net
 
@@ -39,6 +42,8 @@ services:
     environment:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
+    depends_on:
+      - ollama
     networks:
       - proxy-net
 
