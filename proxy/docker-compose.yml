@@ -4,8 +4,9 @@ services:
     image: nginxproxy/nginx-proxy
     container_name: proxy
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '81:81'
+      - '443:443'
     volumes:
       - ${DOCKER_SOCKET}:/tmp/docker.sock:ro
       - ./certs:/etc/nginx/certs
@@ -15,24 +16,26 @@ services:
   ollama:
     image: ollama/ollama:0.6.8
     container_name: ollama
+    restart: unless-stopped
     volumes:
       - ./services/ollama:/root/.ollama
       - ./zscaler_cert:/tmp/zscaler_cert
-    expose:
-      - "${OLLAMA_EXPSPORT}"
+    ports:
+      - "${OLLAMA_EXPSPORT}:${OLLAMA_EXPSPORT}"
     environment:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
     networks:
       - proxy-net
 
-  chromadb:
+  chroma:
     image: chromadb/chroma:1.0.8
     container_name: chroma
+    restart: unless-stopped
     volumes:
       - ./services/chroma:/chroma/chroma
-    expose:
-      - "${CHROMA_EXPSPORT}"
+    ports:
+      - "${CHROMA_EXPSPORT}:${CHROMA_EXPSPORT}"
     environment:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
@@ -58,5 +61,3 @@ services:
 
 networks:
   proxy-net:
-
-    
