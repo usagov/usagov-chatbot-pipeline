@@ -1,13 +1,21 @@
 # pylint: disable=missing-module-docstring, invalid-name, wrong-import-position, line-too-long
+import os
 import sys
 import chromadb
 import ollama
 
-chromaclient = chromadb.HttpClient(host="localhost", port=8000)
+ollama_host = os.environ.get("OLLAMA_HOST", "localhost")
+chroma_host = os.environ.get("CHROMA_HOST", "localhost")
+chroma_port = os.environ.get("CHROMA_PORT", "8000")
+#chroma_ssl  = os.environ.get("CHROMA_SSL", False )
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port ) #,ssl=chroma_ssl)
+
 collection = chromaclient.get_or_create_collection(name="buildragwithpython")
 
 query = " ".join(sys.argv[1:])
-queryembed = ollama.embed(model="nomic-embed-text", input=query)['embeddings']
+
+oc = ollama.Client(host=ollama_host)
+queryembed = oc.embed(model="nomic-embed-text", input=query)['embeddings']
 
 relateddocs = '\n\n'.join(collection.query(query_embeddings=queryembed)['documents'][0])
 prompt = (

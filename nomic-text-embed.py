@@ -46,7 +46,12 @@ def getembedding(local_chunks):
     return local_embeds.get('embeddings', [])
 
 
-chromaclient = chromadb.HttpClient(host="localhost", port=8000)
+ollama_host = os.environ.get("OLLAMA_HOST", "localhost")
+chroma_host = os.environ.get("CHROMA_HOST", "localhost")
+chroma_port = os.environ.get("CHROMA_PORT", "8000")
+#chroma_ssl  = os.environ.get("CHROMA_SSL", False )
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port ) #,ssl=chroma_ssl)
+
 textdocspath = "./output"
 text_data = readtextfiles(textdocspath)
 
