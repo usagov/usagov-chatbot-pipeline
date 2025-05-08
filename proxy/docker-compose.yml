@@ -34,7 +34,8 @@ services:
       - proxy-net
 
   chroma:
-    image: chromadb/chroma:1.0.8
+#    image: chromadb/chroma:1.0.8
+    image: chromadb/chroma:0.6.2
     container_name: chroma
     restart: unless-stopped
     volumes:
@@ -58,6 +59,7 @@ services:
     ports:
       - "${OPENUI_EXPSPORT}:${OPENUI_EXPSPORT}"
     environment:
+      - ENABLE_WEBSOCKET_SUPPORT=false
       - OLLAMA_API_BASE_URL=http://ollama:11434/api
       - VIRTUAL_HOST=${OPENUI_HOSTNAME}
       - VIRTUAL_PORT=${OPENUI_HOSTPORT}
