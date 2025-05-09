@@ -1,4 +1,5 @@
 # pylint: disable=missing-module-docstring, missing-function-docstring, invalid-name, wrong-import-position, line-too-long
+import sys
 import os
 import re
 from ollama import embed
@@ -46,30 +47,45 @@ def getembedding(local_chunks):
     return local_embeds.get('embeddings', [])
 
 
-ollama_host = os.environ.get("OLLAMA_HOST", "ob.straypacket.com")
+ollama_host = os.environ.get("OLLAMA_HOST")
+if ollama_host != "https://ob.straypacket.com:443":
+    print("\n")
+    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com:443'")
+    print("\n")
+    print("---")
+    sys.exit()
+
 chroma_host = os.environ.get("CHROMA_HOST", "cd.straypacket.com")
-chroma_port = os.environ.get("CHROMA_PORT", "80")
-#chroma_ssl  = os.environ.get("CHROMA_SSL", False )
-chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port ) #,ssl=chroma_ssl)
+chroma_port = os.environ.get("CHROMA_PORT", "443")
+chroma_ssl  = os.environ.get("CHROMA_SSL", True )
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port,ssl=chroma_ssl)
 
 textdocspath = "./output"
 text_data = readtextfiles(textdocspath)
 
-collection = chromaclient.get_or_create_collection(name="buildragwithpython", metadata={"hnsw:space": "cosine"})
+colname = "usagovsite"
 
-if chromaclient.get_collection("buildragwithpython"):
-    print("Collection already exists")
-    for collection in chromaclient.list_collections():
-        chromaclient.delete_collection("buildragwithpython")
+try:
+    chromaclient.get_collection(colname)
+except:
+    print(f" Collection {colname} does not exist - creating")
+else:
+    print(f" Collection {colname} already exists - deleting")
+    chromaclient.delete_collection(colname)
 
-collection = chromaclient.get_or_create_collection(name="buildragwithpython", metadata={"hnsw:space": "cosine"})
+collection = chromaclient.get_or_create_collection(name=colname, metadata={"hnsw:space": "cosine"})
 
-for filename, text in text_data.items():
-    print(F"Embedding: {filename}")
-    chunks = chunksplitter(text)
-    embeds = getembedding(chunks)
-    chunknumber = list(range(len(chunks)))
-    ids = [filename + str(index) for index in chunknumber]
-    metadatas = [{"source": filename} for index in chunknumber]
-    collection.add(ids=ids, documents=chunks, embeddings=embeds,
-                   metadatas=metadatas)
+if chromaclient.get_collection(colname):
+    for filename, text in text_data.items():
+        print(F"Embedding: {filename}")
+        chunks = chunksplitter(text)
+        embeds = getembedding(chunks)
+        chunknumber = list(range(len(chunks)))
+        ids = [filename + str(index) for index in chunknumber]
+        metadatas = [{"source": filename} for index in chunknumber]
+        collection.add(ids=ids, documents=chunks, embeddings=embeds,
+                    metadatas=metadatas)
+else:
+    print(f"Collection {colname} could not be created")
+
+print("---")

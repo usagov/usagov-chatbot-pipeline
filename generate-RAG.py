@@ -4,17 +4,25 @@ import sys
 import chromadb
 import ollama
 
-ollama_host = os.environ.get("OLLAMA_HOST", "localhost")
-chroma_host = os.environ.get("CHROMA_HOST", "localhost")
-chroma_port = os.environ.get("CHROMA_PORT", "8000")
-#chroma_ssl  = os.environ.get("CHROMA_SSL", False )
-chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port ) #,ssl=chroma_ssl)
+ollama_host = os.environ.get("OLLAMA_HOST")
+if ollama_host != "https://ob.straypacket.com:443":
+    print("\n")
+    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com:443'")
+    print("\n")
+    print("---")
+    sys.exit()
 
-collection = chromaclient.get_or_create_collection(name="buildragwithpython")
+chroma_host = os.environ.get("CHROMA_HOST", "cd.straypacket.com")
+chroma_port = os.environ.get("CHROMA_PORT", "443")
+chroma_ssl  = os.environ.get("CHROMA_SSL", True )
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port,ssl=chroma_ssl)
+
+collection = chromaclient.get_or_create_collection(name="usagovsite")
 
 query = " ".join(sys.argv[1:])
 
-oc = ollama.Client(host=ollama_host)
+oc = ollama.Client()
+#oc = ollama.Client(host=ollama_host)
 queryembed = oc.embed(model="nomic-embed-text", input=query)['embeddings']
 
 relateddocs = '\n\n'.join(collection.query(query_embeddings=queryembed)['documents'][0])
@@ -42,7 +50,7 @@ prompt = (
     # f"Additionally, please include the names of the files of the documents from the resources provided used in your answer. "
 )
 
-ragoutput = ollama.generate(model="llama3.2", prompt=prompt, stream=False, options={"temperature": 0})
+ragoutput = oc.generate(model="llama3.2", prompt=prompt, stream=False, options={"temperature": 0})
 print(f"Answered using only data from USAgov site pages:\n{ragoutput['response']}")
 
 print("---")
