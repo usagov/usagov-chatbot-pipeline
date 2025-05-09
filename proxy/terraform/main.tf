@@ -224,14 +224,14 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-proxy-a
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
 
-resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
-    count = length(var.ingress_cidr_blocks)
-    security_group_id = aws_security_group.allow_llm.id
-    from_port = 8000
-    to_port = 8000
-    ip_protocol = "tcp"
-    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
-}
+#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
+#    count = length(var.ingress_cidr_blocks)
+#    security_group_id = aws_security_group.allow_llm.id
+#    from_port = 8000
+#    to_port = 8000
+#    ip_protocol = "tcp"
+#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
+#}
 
 #resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
 #    count = length(var.ingress_cidr_blocks)
