@@ -11,7 +11,7 @@ variable "aws_region" {
 }
 
 variable "availability_zone" {
-  description = "Availablility Zone used vars subnet"
+  description = "Availability Zone used vars subnet"
   type    = string
   default = null
 }

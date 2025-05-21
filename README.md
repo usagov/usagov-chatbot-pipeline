@@ -11,7 +11,7 @@ This document will outline steps taken to stand up a development environment to 
 1. The data must be kept local-only, meaning no online AI services should be used
 1. Data processing (text extraction, tokenization and ingestion) should not impose a time/resource burden to the workstation
 1. Everything should be open source (or at least free of charge at this stage)
-1. No accounts should be neccesary for any external tools or data used in the POC
+1. No accounts should be necessary for any external tools or data used in the POC
 
 ## Local Environment Setup
 

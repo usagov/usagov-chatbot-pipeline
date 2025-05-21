@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "This should download the static pages from a locally running docker container of the cms. Will excute: "
+echo "This should download the static pages from a locally running docker container of the cms. Will execute: "
 echo "      docker exec cms tar -c /var/www/html | tar -x -f - --strip-components=2 -C "
 echo "This should download the static pages to a folder named html, which will contain a folder for each page"
 echo "If you need to generate the static files: docker exec -t cms sh /var/www/scripts/tome-static.sh http://localhost"

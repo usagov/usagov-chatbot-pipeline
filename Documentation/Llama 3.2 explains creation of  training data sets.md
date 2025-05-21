@@ -24,7 +24,7 @@ val_labels    # validation labels
 test_labels   # testing labels
 ```
 
-## Explaination
+## Explanation
 
 In this example, `train_test_split` splits your data into three parts: a training set (`train_data` and `train_labels`), a validation set (`val_data`, `val_labels` used for tuning hyperparameters) and a testing set (`test_data` and `test_labels`). The `test_size=0.2` parameter means that 20% of your data will be used for validation and the remaining 80% will be used for training.
 
