@@ -1,4 +1,0 @@
-bucket  = "gsa-tts-usagov-cbproto-tf-state"
-key     = "usagov-chatbot-pipeline.tfstate"
-region  = "us-east-2"
-profile = "gsa"
