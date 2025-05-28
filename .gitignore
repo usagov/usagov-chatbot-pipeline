@@ -7,9 +7,6 @@
 # Docker compose artifacts
 /local/services/*
 !/local/services/.gitkeep
-/output/*
-!/output/.gitkeep
-
 /proxy/services/*
 !/proxy/.env
 !/proxy/docker-compose.yml
@@ -24,6 +21,15 @@
 #!/proxy/letsencrypt/config/.gitkeep
 #!/proxy/letsencrypt/work/.gitkeep
 #!/proxy/letsencrypt/logs/.gitkeep
+
+# Knowledgebase in and out files
+/output/*
+!/output/.gitkeep
+!/output/README.md
+
+/input/*
+!/input/.gitkeep
+!/input/README.md
 
 # Local .terraform directories
 **/.terraform/*
