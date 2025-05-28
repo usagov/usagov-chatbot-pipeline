@@ -1,5 +1,19 @@
 # A pipeline for importing USA.gov static html into a local-only LLM
 
+# (NOTE that this document is being re-worked to reflect the current state of the project)
+
+## Updated summary of current state (LLM server side):
+1. A LLM/VDB server configuration is included in repo
+1. There is a terraform configuration for an AWS implementation of the virtual hardware
+1. The server is container based, and hosts Ollama and ChromaDB services via an ngix proxy server
+1. The proxy server implements several value-add features, most importantly DNS proxy to the internal Ollama and ChromaDB containers and TLS certificate management
+
+## Updated summary of current state (LLM client side):
+1. Implementations of chunking and embedding processes are available in both PHP and Python
+1. Implementations of simple LLM query scripts which access the RAG data in the VDB are available in PHP and Python
+
+
+## Mostly outdated sections follow:
 USAgov has created a small team to implement a proof of concept application for a USAgov-specific chatbot.
 This document will outline steps taken to stand up a development environment to support the import of the USA.gov html files into a local-only LLM.
 
