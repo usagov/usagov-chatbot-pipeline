@@ -60,7 +60,7 @@ chroma_port = os.environ.get("CHROMA_PORT", "443")
 chroma_ssl  = os.environ.get("CHROMA_SSL", True )
 chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port,ssl=chroma_ssl)
 
-textdocspath = "./output"
+textdocspath = "../output"
 text_data = readtextfiles(textdocspath)
 
 colname = "usagovsite"

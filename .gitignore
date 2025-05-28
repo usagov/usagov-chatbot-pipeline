@@ -82,5 +82,12 @@
 **/*.z
 **/*.zip
 
+# composer files
+**/composer.phar
+**/vendor
+
 # Database files
 **/*.sql
+
+# IDE files
+**/*.code-workspace
