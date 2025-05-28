@@ -1,0 +1,29 @@
+{
+    "name": "arpage/usagov-chatbot-pipeline",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+           "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mark Vitek",
+            "email": "straypacket@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "require": {
+        "codewithkyrian/chromadb-php": "@dev",
+        "symfony/var-dumper": "^6.3",
+        "ardagnsrn/ollama-php": "^1.0"
+    }
+}
