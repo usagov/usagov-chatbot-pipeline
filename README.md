@@ -13,7 +13,7 @@
 1. Implementations of simple LLM query scripts which access the RAG data in the VDB are available in PHP and Python
 
 ### Proxy admin UI
-[image](./doc/images/proxy-admin-ui.png)
+![image](./doc/images/proxy-admin-ui.png)
 
 ## Mostly outdated sections follow:
 USAgov has created a small team to implement a proof of concept application for a USAgov-specific chatbot.

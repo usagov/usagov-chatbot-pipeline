@@ -1,39 +1,72 @@
 services:
 
-  ollama-backend:
-    image: ollama/ollama
+  proxy:
+    image: 'docker.io/jc21/nginx-proxy-manager:2.12.3'
+    container_name: proxy
+    restart: unless-stopped
     ports:
-      - "11434:11434"
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./services/proxy/data:/data
+      - ./services/proxy/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - ollama
+      - chroma
+      - openweb
+    networks:
+      - proxy-net
+
+  ollama:
+    image: ollama/ollama:0.6.8
+    container_name: ollama
+    restart: unless-stopped
     volumes:
       - ./services/ollama:/root/.ollama
       - ./zscaler_cert:/tmp/zscaler_cert
-    container_name: ollama-backend
-    networks:
-      - gsa-gov
-
-  chromadb:
-    image: chromadb/chroma:0.6.2
-    container_name: chromadb
     ports:
-      - "8000:8000"
+      - "${OLLAMA_EXPSPORT}:${OLLAMA_EXPSPORT}"
+    environment:
+      VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
+      WEB_PORTS: "${OLLAMA_HOSTPORT}"
+    networks:
+      - proxy-net
+
+  chroma:
+#    image: chromadb/chroma:1.0.8
+    image: chromadb/chroma:0.6.2
+    container_name: chroma
+    restart: unless-stopped
     volumes:
       - ./services/chroma:/chroma/chroma
-    networks:
-      - gsa-gov
-
-  ollama-openweb-ui:
-    image: ghcr.io/open-webui/open-webui:dev
     ports:
-      - "3000:8080"
-    volumes:
-      - ./services/openweb-ui:/openweb-ui
+      - "${CHROMA_EXPSPORT}:${CHROMA_EXPSPORT}"
     environment:
-      - OLLAMA_API_BASE_URL=http://ollama-backend:11434/api
+      VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
+      WEB_PORTS: ${CHROMA_HOSTPORT}
     depends_on:
-      - ollama-backend
-    container_name: ollama-openweb-ui
+      - ollama
     networks:
-      - gsa-gov
+      - proxy-net
+
+  openweb:
+    image: ghcr.io/open-webui/open-webui:git-de0f52b-ollama
+    container_name: openweb
+    restart: unless-stopped
+    volumes:
+      - ./services/openweb:/openweb-ui
+    ports:
+      - "${OPENUI_EXPSPORT}:${OPENUI_EXPSPORT}"
+    environment:
+      - ENABLE_WEBSOCKET_SUPPORT=false
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+      - VIRTUAL_HOST=${OPENUI_HOSTNAME}
+      - VIRTUAL_PORT=${OPENUI_HOSTPORT}
+    depends_on:
+      - ollama
+    networks:
+      - proxy-net
 
 networks:
-  gsa-gov:
+  proxy-net:
