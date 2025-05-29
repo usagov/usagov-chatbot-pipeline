@@ -3,14 +3,20 @@
 // the relevant data from each html file, without the html stuff - just a line
 // of text for each relevant html element
 
-$SKIP_TEXT = [
-    "Find an office near you:",
-    "Contact:",
-    "Website:",
-    "Phone number:",
-    "Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.",
-    "SHARE THIS PAGE:",
-    "LAST UPDATED:"
+$SKIP_PATTERNS = [
+    "Find an office near you",
+    "Contact",
+    "Website",
+    "Phone number",
+    "Ask a real person any government-related question for free\. They will get you the answer or let you know where to find it\.",
+    "SHARE THIS PAGE",
+    "LAST UPDATED",
+    "A-Z index of U\.S\. government departments and agencies",
+    "Call USAGov",
+    "Chat with USAGov",
+    "^[A-Z]$", // single uppercase letters
+    "^previous$", // navigation links
+    "^next$", // navigation links
 ];
 
 $CSS_CLASSES = ['usa-prose', 'usa-card__body', 'life-events-item-content', 'usagov-directory-table'];
@@ -64,8 +70,21 @@ foreach ($html_files as $html_file) {
     foreach ($xpath->query($selector) as $div) {
         foreach (['p', 'span', 'a'] as $tag) {
             foreach ($div->getElementsByTagName($tag) as $item) {
-                $text = $item->textContent;
-                if (!in_array($text, $check_duplicates) && !in_array($text, $SKIP_TEXT)) {
+                $text = trim($item->textContent);
+
+                // Check if text matches any skip pattern
+                $skip = false;
+                foreach ($SKIP_PATTERNS as $pattern) {
+                    if (preg_match("/$pattern/", $text)) {
+                        $skip = true;
+                        break;
+                    }
+                }
+
+                if (
+                    !$skip &&
+                    !in_array($text, $check_duplicates)
+                ) {
                     $check_duplicates[] = $text;
                     $text = preg_replace('/\s+/', ' ', $text);
                     $text = trim($text);
