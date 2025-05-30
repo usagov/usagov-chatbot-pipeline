@@ -13,9 +13,15 @@ class ChatbotServices {
   protected $inPath = __DIR__ . '/../input';
   protected $embeddingModel = 'nomic-embed-text:latest';
   protected $chatModel = 'llama3.2';
-  protected $chromaHost = 'http://cd.radon.labs.straypacket.com';
+
+  // Normally $chromaPort should be 8000, but our test server
+  // proxies the below DNS to a container on 8000
+  protected $chromaHost = 'http://cd.straypacket.com';
   protected $chromaPort = 80;
-  protected $ollamaHost = 'http://ob.radon.labs.straypacket.com';
+
+  // Normally, one should append :11434 to $ollamaHost, but our test server
+  // proxies the below DNS to a container on 11434
+  protected $ollamaHost = 'http://ob.straypacket.com';
   protected $collectionName = 'usagovsite';
   /**
    * Constructor for ChatbotServices.
