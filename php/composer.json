@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "codewithkyrian/chromadb-php": "@dev",
+        "codewithkyrian/chromadb-php": "^0.4",
         "symfony/var-dumper": "^6.3",
         "ardagnsrn/ollama-php": "^1.0"
     }
