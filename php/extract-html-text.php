@@ -21,7 +21,7 @@ $SKIP_PATTERNS = [
 
 $CSS_CLASSES = ['usa-prose', 'usa-card__body', 'life-events-item-content', 'usagov-directory-table'];
 
-$ROOT_PATH = '..';
+$ROOT_PATH = __DIR__ . '/..';
 $INPUT_PATH = $ROOT_PATH . '/input';
 $OUTPUT_PATH = $ROOT_PATH . '/output';
 

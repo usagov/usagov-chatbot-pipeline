@@ -13,9 +13,9 @@ class ChatbotServices {
   protected $inPath = __DIR__ . '/../input';
   protected $embeddingModel = 'nomic-embed-text:latest';
   protected $chatModel = 'llama3.2';
-  protected $chromaHost = 'https://cd.straypacket.com';
-  protected $chromaPort = 443;
-  protected $ollamaHost = 'https://ob.straypacket.com';
+  protected $chromaHost = 'http://cd.radon.labs.straypacket.com';
+  protected $chromaPort = 80;
+  protected $ollamaHost = 'http://ob.radon.labs.straypacket.com';
   protected $collectionName = 'usagovsite';
   /**
    * Constructor for ChatbotServices.
@@ -145,7 +145,8 @@ class ChatbotServices {
   /**
    * Ask a question using the chat pipeline.
    */
-  public function askChat($collectionName, $query, $toJSON = FALSE) {
+  public function askChat($query, $collectionName = null, $toJSON = FALSE) {
+    $collectionName = $collectionName ?? $this->collectionName;
     $collection = $this->chroma->getCollection($collectionName);
 
     // Get embedding for the query
