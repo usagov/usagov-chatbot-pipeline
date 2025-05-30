@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94fa548847e45551029d136a24e5c871",
+    "content-hash": "7c9c22f13a1e1e004666a45ac7c7c987",
     "packages": [
         {
             "name": "ardagnsrn/ollama-php",
@@ -67,7 +67,7 @@
         },
         {
             "name": "codewithkyrian/chromadb-php",
-            "version": "dev-main",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CodeWithKyrian/chromadb-php.git",
@@ -88,7 +88,6 @@
                 "pestphp/pest": "^2.19",
                 "symfony/var-dumper": "^6.3"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -889,9 +888,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "codewithkyrian/chromadb-php": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
