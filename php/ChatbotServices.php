@@ -216,7 +216,7 @@ class ChatbotServices {
       // Ignore if not exists
     }
 
-    $collection = $this->chroma->getOrCreateCollection(
+    $collection = $this->chroma->createCollection(
       $collectionName,
       ['hnsw:space' => 'cosine'],
       $embeddingFunction

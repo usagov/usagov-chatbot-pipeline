@@ -19,7 +19,7 @@ services:
       - proxy-net
 
   ollama:
-    image: ollama/ollama:0.6.8
+    image: ollama/ollama:0.8.0
     container_name: ollama
     restart: unless-stopped
     volumes:

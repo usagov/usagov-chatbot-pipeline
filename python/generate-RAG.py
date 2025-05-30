@@ -4,18 +4,11 @@ import sys
 import chromadb
 import ollama
 
-ollama_host = os.environ.get("OLLAMA_HOST")
-if ollama_host != "https://ob.straypacket.com:443":
-    print("\n")
-    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com:443'")
-    print("\n")
-    print("---")
-    sys.exit()
+ollama_host = os.environ.get("OLLAMA_HOST","http://127.0.0.1:11434")
+chroma_host = os.environ.get("CHROMA_HOST","127.0.0.1")
+chroma_port = os.environ.get("CHROMA_PORT","8000")
 
-chroma_host = os.environ.get("CHROMA_HOST", "cd.straypacket.com")
-chroma_port = os.environ.get("CHROMA_PORT", "443")
-chroma_ssl  = os.environ.get("CHROMA_SSL", True )
-chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port,ssl=chroma_ssl)
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port)
 
 collection = chromaclient.get_or_create_collection(name="usagovsite")
 
@@ -45,5 +38,5 @@ prompt = (
 
 ragoutput = oc.generate(model="llama3.2", prompt=prompt, stream=False, options={"temperature": 0})
 print(f"Answered using only data from USAgov site pages:\n{ragoutput['response']}")
+print("\n")
 
-print("---")
