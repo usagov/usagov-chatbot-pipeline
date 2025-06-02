@@ -5,8 +5,8 @@
 **/*.tok
 
 # Docker compose artifacts
-/local/services/*
-!/local/services/.gitkeep
+/server/services/*
+!/server/services/.gitkeep
 /proxy/services/*
 !/proxy/.env
 !/proxy/docker-compose.yml
