@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Department of Veterans Affairs (VA)",
+    "description": "A federal agency responsible for providing benefits and services to veterans.",
+    "telephone number": "800-827-1000",
+    "email": "vets@va.gov",
+    "URL": "https://www.va.gov"
+  },
+  {
+    "name": "Military Pay Benefits",
+    "description": "A program providing financial assistance to eligible military personnel and their families.",
+    "telephone number": "800-461-6332",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Veterans Health Benefits",
+    "description": "A program providing medical benefits and services to eligible veterans.",
+    "telephone number": "800-827-1000",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "VA Healthcare Access Network (VAN)",
+    "description": "A program providing healthcare access for rural veterans.",
+    "telephone number": "877-222-7775",
+    "email": "",
+    "URL": "https://www.va.gov/health-care-access-network"
+  },
+  {
+    "name": "Veterans' Employment and Training Service (VETS)",
+    "description": "A program providing employment services to eligible veterans.",
+    "telephone number": "202-287-6949",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Transition Assistance Program (TAP)",
+    "description": "A program providing transition assistance to military service members preparing for separation or retirement.",
+    "telephone number": "",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Education Benefits",
+    "description": "A program providing education benefits to eligible veterans and their families.",
+    "telephone number": "877-827-1000",
+    "email": "education@va.gov",
+    "URL": "https://www.va.gov/education-benefits"
+  },
+  {
+    "name": "Home Loan Guaranty",
+    "description": "A program providing home loan guaranty to eligible veterans.",
+    "telephone number": "800-827-1000",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Housing and Urban Development (HUD) VA Supportive Housing Program",
+    "description": "A program providing housing support to homeless veterans.",
+    "telephone number": "202-708-4613",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Veterans' Preference",
+    "description": "A program providing preference in hiring for certain federal jobs to eligible veterans.",
+    "telephone number": "202-208-7000",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Survivor Benefit Plan (SBP)",
+    "description": "A program providing financial assistance to the surviving spouse of an eligible veteran.",
+    "telephone number": "800-827-1000",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Dependents' Educational Assistance (DEA) Program",
+    "description": "A program providing education benefits to eligible dependents of military service members.",
+    "telephone number": "877-827-1000",
+    "email": "education@va.gov",
+    "URL": "https://www.va.gov/education-benefits"
+  },
+  {
+    "name": "Health Care for Women Veterans (HCWW) Program",
+    "description": "A program providing health care benefits to eligible female veterans.",
+    "telephone number": "877-236-4597",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Veterans' Employment and Training Service (VETS)",
+    "description": "A program providing employment services to eligible veterans.",
+    "telephone number": "202-287-6949",
+    "email": "",
+    "URL": ""
+  },
+  {
+    "name": "Transition Assistance Program (TAP) - VET TEC",
+    "description": "A program providing transition assistance and vocational training to military service members preparing for separation or retirement.",
+    "telephone number": "",
+    "email": "",
+    "URL": ""
+  }
+]

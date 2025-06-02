@@ -1,35 +1,26 @@
 # A pipeline for importing USA.gov static html into an LLM+VDB
 
-## Updated summary of current state (LLM server side):
-1. A LLM/VDB server configuration is included in repo
-1. There is a terraform configuration for an AWS implementation of the virtual hardware
-1. The server is container based, and hosts Ollama and ChromaDB services via an ngix proxy server
-1. The proxy server implements several value-add features, most importantly DNS proxy to the internal Ollama and ChromaDB containers and TLS certificate management
+USAGov has created a small team to implement a proof of concept application for a USAGov-specific chatbot
 
-### Example Backend Architecture
-![image](./doc/images/chatbot-backend-architecture.png)
+This document outlines steps stand up a development environment to support the import into and queries of the USAGov html files to/from a local-only LLM+VDB
 
-### Proxy admin UI, implementing the container routing
-![image](./doc/images/proxy-admin-ui.png)
+The "development environment" can/should also be used to create non-local (read: AWS) implementations of the LLM+VDB for better performance.
 
-## Updated summary of current state (LLM client side):
-1. Implementations of chunking and embedding processes are available in both [PHP](./php/README.md) and [Python](./python/README.md)
-1. Implementations of simple LLM query scripts which access the RAG data in the VDB are available in [PHP](./php/README.md) and [Python](./python/README.md)
+## 1. Implementation Considerations
+### [Technical Info](./doc/TechConsiderations.md)
+
+## 2. LLM server side:
+### [Backend Architecture](./doc/Architecture.md)
+### [Requirements](./doc/BackendRequirements)
+
+## 3. LLM client side:
+Implementations of chunking and embedding processes are available in PHP and Python
+Implementations of simple LLM query scripts which access the RAG data in the VDB are available in PHP and Python
+### [PHP](./php/PHP.md)
+### [Python](./python/Python.md)
 
 
-## Mostly outdated sections follow:
-USAgov has created a small team to implement a proof of concept application for a USAgov-specific chatbot.
-This document will outline steps taken to stand up a development environment to support the import of the USA.gov html files into a local-only LLM.
 
-## Considerations for proof of concept implementation
-
-1. This information is meant to be used from a DevOps perspective, therefore tools and tactics will be command-line-centric (MacOS, Linux, WSL2 should all work similarly)
-1. The POC should be kept "lean and mean", in order to get a working demo as soon as possible
-1. The model and environment must be small enough to reside on a standard USA.gov developer workstation
-1. The data must be kept local-only, meaning no online AI services should be used
-1. Data processing (text extraction, tokenization and ingestion) should not impose a time/resource burden to the workstation
-1. Everything should be open source (or at least free of charge at this stage)
-1. No accounts should be neccesary for any external tools or data used in the POC
 
 ## Local Environment Setup
 
