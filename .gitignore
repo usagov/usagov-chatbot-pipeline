@@ -12,16 +12,6 @@
 !/proxy/docker-compose.yml
 !/proxy/services/.gitkeep
 
-!/certs/**
-!/certs/nginx/services/**
-
-/proxy/letsencrypt/*
-#/proxy/letsencrypt/work/*
-#/proxy/letsencrypt/logs/*
-#!/proxy/letsencrypt/config/.gitkeep
-#!/proxy/letsencrypt/work/.gitkeep
-#!/proxy/letsencrypt/logs/.gitkeep
-
 # Knowledgebase in and out files
 /output/*
 !/output/.gitkeep
