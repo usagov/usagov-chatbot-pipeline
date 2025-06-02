@@ -25,7 +25,7 @@ $ROOT_PATH = __DIR__ . '/..';
 $INPUT_PATH = $ROOT_PATH . '/input';
 $OUTPUT_PATH = $ROOT_PATH . '/output';
 
-$EXCLUDE_DIRS = ['es', 'espanol', 'sites', 'core', 'modules', 'themes', 's3', '_data'];
+$EXCLUDE_DIRS = ['es', 'espanol', 'sites', 'core', 'modules', 'themes', 's3', '_data', '.git'];
 
 function getHtmlFiles($dir, $excludeDirs) {
     $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));

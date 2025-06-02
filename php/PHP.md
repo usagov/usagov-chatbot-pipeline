@@ -52,7 +52,7 @@ php cb-askchat.php -q="..." | jq '.response'
 ### Extract HTML Text
 
 ```sh
-php extract-html-text.php
+php cb-site-extractor.php
 ```
 Extracts relevant text from HTML files in the input directory and writes `.dat` files to the output directory.
 
@@ -62,5 +62,7 @@ Embedding is handled via methods in `ChatbotServices.php`. See the class for det
 
 ---
 
-**Note:**  
-You must have running ChromaDB and Ollama services, and configure their URLs in `ChatbotServices.php` as needed.
+Note:
+You must have running ChromaDB and Ollama services running (locally or externally), and configure their URLs/Ports in [ChatbotServices.php](../php/ChatbotServices.php) as needed.
+
+The [server](../server/) folder has a [docker-compose.yml](../server/docker-compose.yml) file to get those services running locally if you do not have an external server running them.
