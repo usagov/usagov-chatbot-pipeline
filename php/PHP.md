@@ -5,64 +5,121 @@ This folder contains PHP scripts and classes for interacting with the USAGov Cha
 ## Contents
 
 - `ChatbotServices.php`  
-  Main class for embedding, querying, and managing ChromaDB and Ollama models.
+  Main class for embedding, querying, and managing ChromaDB and Ollama models
+
+- `cb-site-extractor.php`  
+  Extract relevant text from HTML files for embedding
+
+- `cb-healthcheck.php`  
+  Display models present in LLM, and collections present in VDB
+
+- `cb-create-embeddings.php`  
+  Import extracted text into Vector DB (Chroma)
 
 - `cb-askchat.php`  
-  Command-line tool to ask questions to the chatbot and get responses from a specified collection.
+  Ask questions to the chatbot and get responses from a specified collection
 
-- `extract-html-text.php`  
-  Extracts relevant text from HTML files for embedding.
 
 ## Requirements
 
-- PHP 8.1 or newer
-- Composer dependencies (see `composer.json`)
-- Access to ChromaDB and Ollama services
+### 1. PHP 8.2 or newer
 
-## Setup
+Packages: `php-cli php-xml php-zip`
 
-1. Requires PHP 8.2.x CLI and php-xml libraries
+### 2. Composer and dependencies (see [composer.json](./composer.json))
+
+### 3. Access to ChromaDB and Ollama services
+
+You must have running ChromaDB and Ollama services running (locally or externally), and configure their URLs/Ports in [ChatbotServices.php](../php/ChatbotServices.php) as needed
+
+The [server](../server/) folder has a [docker-compose.yml](../server/docker-compose.yml) file to get those services running locally if you do not have an external server running them
+
+## Dev Environment (or server) Setup
+
+1. PHP 8.2.x cli, xml and zip libraries
+
+   ```sh
+   cd php
+   sudo apt install php-cli php-xml php-zip
+   ```
 
 2. Install dependencies:
    ```sh
+   cd php
    composer install
    ```
 
-3. Configure input and output directories as needed in the scripts.
+4. Pull USAGov static site files from github
+   ```sh
+   cd input
+   clone https://github.com/usagov/usagov-archive-2025.git
+   ```
 
-## Usage
+## Pipeline Script Usage
 
-### Ask the Chatbot
+1. Extract data from USGov static site files
 
-```sh
-php cb-askchat.php -q="What services are available to veterans?" -c=usagovsite -j
-```
-
-**Options:**
-- `-q=QUESTION` — The question to ask the chatbot (required)
-- `-c=COLLECTION` — The ChromaDB collection to use (optional, default: `usagovsite`)
-- `-j` — Output response as JSON array (optional)
-- `-h`, `--help` — Show usage/help
-
-To extract just the chatbot's response using `jq`:
-```sh
-php cb-askchat.php -q="..." | jq '.response'
-```
-
-### Extract HTML Text
-
-```sh
-php cb-site-extractor.php
-```
-Extracts relevant text from HTML files in the input directory and writes `.dat` files to the output directory.
-
-### Embedding Data
-
-Embedding is handled via methods in `ChatbotServices.php`. See the class for details.
-
+   ```
+   cd php
+   rm ../output/*.dat
+   php cb-site-extractor.php
+   
+   ### let us see what is there now
+   ls ../output/l*.dat
+   ```
 ---
+2. Chunk/embed the extracted text into the vector database.  This will take some time, depending on the hardware you are using to hose the LLM+VDB (7 minutes is not unusual for my local [i7+32GB+nvmeSSD on WSL2])
 
-Note:
-You must have running ChromaDB and Ollama services running (locally or externally), and configure their URLs/Ports in [ChatbotServices.php](../php/ChatbotServices.php) as needed.
+   ```
+   php cb-create-embeddings.php
+   ```
+---
+3. Ask the Chatbot
 
-The [server](../server/) folder has a [docker-compose.yml](../server/docker-compose.yml) file to get those services running locally if you do not have an external server running them.
+   ```sh
+   ### get the answer (as embedded plaintext), as well as some metadata about the query
+   php cb-askchat.php -q="What services are available to veterans?" -c=usagovsite | jq -r .
+   
+   ### get the answer, and only the answer, as json
+   php cb-askchat.php -q="What services are available to veterans?" -c=usagovsite -j | jq -r '.completions.response'
+   
+   ```
+
+   **Options:**
+   - `-q=QUESTION` — The question to ask the chatbot (required)
+   - `-c=COLLECTION` — The ChromaDB collection to use (optional, default: `usagovsite`)
+   - `-j` — Output response as JSON array (optional)
+   - `-h`, `--help` — Show usage/help
+
+   To extract just the chatbot's response using `jq`:
+   ```sh
+   php cb-askchat.php -q="..." | jq '.response'
+   ```
+---
+### Running scripts locally, with LLM+VDB running externally
+#### The `ChatbotServices` class constructor provides the following host/port arguments
+1. `$ollamaHost` - this defaults to `localhost:11434`
+2. `$chromaHost` - this defaults to `localhost`
+3. `$chromaPort` - this defaults to `8000`
+
+Note that the ollama host/port are joined into one variable.  This is due to the way the ollama classes I've used tend to want the OLLAMA_HOST env var and constructor arguments - I have not seen them separated into separate host/port variables until deep into the library code
+
+The scripts which access the LLM+VDB provide command line arguments to set the host/port for both ollama and chromadb:
+
+```
+cb-askchat.php | cb-healthcheck.php | cb-create-embeddings.php:
+
+   -oh=<ollama hostname or ipv4 address>   (defaults to localhost)
+   -op=<ollama port number>                (defaults to 11434)
+   -ch=<chromadb hostname or ipv4 address> (defaults to localhost)
+   -cp=<chromadb port number>              (defaults to 8000)
+```
+
+
+The scripts which access the VDB provide a command line argument to set the collection name.  It defaults to usagovsite.  If you happen to be sharing a remote server, please change the default collection name in the `ChatbotService` class, or use the cli argument, as shown below
+
+```
+cb-askchat.php | cb-healthcheck.php | cb-create-embeddings.php:
+
+   -c=<vector db collection name>   (defaults to `usagovsite`)
+```

@@ -3,21 +3,7 @@
 require_once __DIR__ . '/ChatbotServices.php';
 //use ChatbotServices;
 
-$cbs = new ChatbotServices(
-    forceDirChecks: TRUE,
-    outPath: __DIR__ . '/../output',
-    inPath: __DIR__ . '/../input',
-    embeddingModel: 'nomic-embed-text:latest',
-    chatModel: 'llama3.2',
-    chromaHost: 'http://localhost',
-    chromaPort: 8000,
-    ollamaHost: 'http://localhost:11434',
-    collectionName: 'usagovsite'
-);
-
 $toJSON = false;
-$collectionName = null;
-$question = null;
 
 // Usage/help message
 function print_usage() {
@@ -46,6 +32,14 @@ foreach ($argv as $arg) {
         $collectionName = substr($arg, strlen('-c='));
     } elseif (($arg === '-j')) {
         $toJSON = true;
+    } elseif (str_starts_with($arg, '-oh=')) {
+        $ollamaHost = substr($arg, strlen('-oh='));
+    } elseif (str_starts_with($arg, '-op=')) {
+        $ollamaPort = substr($arg, strlen('-op='));
+    } elseif (str_starts_with($arg, '-ch=')) {
+        $chromaHost = substr($arg, strlen('-ch='));
+    } elseif (str_starts_with($arg, '-cp=')) {
+        $chromaPort = substr($arg, strlen('-cp='));
     } elseif (($arg === '-h') || ($arg === '--help')) {
         $helpRequested = TRUE;
         print_usage();
@@ -58,6 +52,19 @@ if ($question === null) {
     print_usage();
     exit(1);
 }
+
+$chromaHost ??= 'localhost';
+$chromaPort ??= '8000';
+$ollamaHost ??= 'localhost';
+$ollamaPort ??= '11434';
+$collectionName ??= 'usagovsite';
+
+$cbs = new ChatbotServices(
+    collectionName: $collectionName,
+    chromaHost: $chromaHost,
+    chromaPort: $chromaPort,
+    ollamaHost: "$ollamaHost:$ollamaPort"
+);
 
 $response = $cbs->askChat(
     query:$question,

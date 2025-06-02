@@ -4,10 +4,11 @@ USAGov has created a small team to implement a proof of concept application for 
 
 This document outlines steps stand up a development environment to support the import into and queries of the USAGov html files to/from a local-only LLM+VDB
 
-The "development environment" can also be used to create non-local (read: AWS) implementations of the LLM+VDB for better performance.
+The "development environment" can also be used to create non-local (read: AWS) implementations of the LLM+VDB for better performance
 
-## 1. Implementation Considerations
-### [Technical Info](./doc/TechConsiderations.md)
+The pipeline includes an nginx proxy server, useful for serving Ollama and ChromaDB over ports 80/443.  This simplifies configurations, and eliminates justifying "non-standard" ports when submitting to security reviews/audits. The proxy will also handle TLS certs, with the same configurtation and security benefits
+
+## 1. [Proof of Concept Implementation Considerations](./doc/TechConsiderations.md)
 
 ## 2. LLM server side:
 ### [Backend Architecture](./doc/Architecture.md)

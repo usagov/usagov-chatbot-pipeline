@@ -13,15 +13,10 @@ class ChatbotServices {
   protected $inPath = __DIR__ . '/../input';
   protected $embeddingModel = 'nomic-embed-text:latest';
   protected $chatModel = 'llama3.2';
+  protected $chromaHost = 'http://localhost';
+  protected $chromaPort = 8000;
 
-  // Normally $chromaPort should be 8000, but our test server
-  // proxies the below DNS to a container on 8000
-  protected $chromaHost = 'http://cd.straypacket.com';
-  protected $chromaPort = 80;
-
-  // Normally, one should append :11434 to $ollamaHost, but our test server
-  // proxies the below DNS to a container on 11434
-  protected $ollamaHost = 'http://ob.straypacket.com';
+  protected $ollamaHost = 'http://localhost:11434';
   protected $collectionName = 'usagovsite';
   /**
    * Constructor for ChatbotServices.
@@ -203,7 +198,9 @@ class ChatbotServices {
   /**
    * Embed all .dat files in the output directory into ChromaDB.
    */
-  public function embedSite($collectionName = 'usagovsite', $chunkSize = 100) {
+  public function embedSite($collectionName = null, $chunkSize = 100) {
+  
+    $collectionName = $collectionName ?? $this->collectionName;
     $embeddingFunction = new OllamaEmbeddingFunction(
       baseUrl: $this->ollamaHost,
       model: $this->embeddingModel
