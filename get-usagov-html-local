@@ -5,6 +5,5 @@ echo "      docker exec cms tar -c /var/www/html | tar -x -f - --strip-component
 echo "If you need to generate the static files: docker exec -t cms sh /var/www/scripts/tome-static.sh http://localhost"
 echo
 
-rm -rf ./input/*.html
-rm -rf ./output/*.dat
-docker exec cms tar -c /var/www/html | tar -x -f - --strip-components=3 -C ./input
+rm -rf ../input/*.html
+docker exec cms tar -c /var/www/html | tar -x -f - --strip-components=3 -C ../input
