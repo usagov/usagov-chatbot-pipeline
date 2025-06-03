@@ -240,4 +240,33 @@ class ChatbotServices {
     return TRUE;
   }
 
+  public static function getArgs( $argv) {
+    $ollamaHost = 'localhost';
+    $ollamaPort = '11434';
+    $chromaHost = 'localhost';
+    $chromaPort = '8000';
+    $collectionName = 'usagovsite';
+
+    foreach ($argv as $arg) {
+      if (str_starts_with($arg, '-oh=')) {
+        $ollamaHost = substr($arg, strlen('-oh='));
+      } elseif (str_starts_with($arg, '-op=')) {
+        $ollamaPort = substr($arg, strlen('-op='));
+      } elseif (str_starts_with($arg, '-ch=')) {
+        $chromaHost = substr($arg, strlen('-ch='));
+      } elseif (str_starts_with($arg, '-cp=')) {
+        $chromaPort = substr($arg, strlen('-cp='));
+      } elseif (str_starts_with($arg, '-c=')) {
+        $collectionName = substr($arg, strlen('-c='));
+      }
+    }
+
+    return [
+     'ollamaHost' => $ollamaHost,
+     'ollamaPort' => $ollamaPort,
+     'chromaHost' => $chromaHost,
+     'chromaPort' => $chromaPort,
+     'collectionName' => $collectionName,
+    ];
+  }
 }

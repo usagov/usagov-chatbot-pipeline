@@ -28,18 +28,8 @@ if ($argc < 2) {
 foreach ($argv as $arg) {
     if (str_starts_with($arg, '-q=')) {
         $question = substr($arg, strlen('-q='));
-    } elseif (str_starts_with($arg, '-c=')) {
-        $collectionName = substr($arg, strlen('-c='));
     } elseif (($arg === '-j')) {
         $toJSON = true;
-    } elseif (str_starts_with($arg, '-oh=')) {
-        $ollamaHost = substr($arg, strlen('-oh='));
-    } elseif (str_starts_with($arg, '-op=')) {
-        $ollamaPort = substr($arg, strlen('-op='));
-    } elseif (str_starts_with($arg, '-ch=')) {
-        $chromaHost = substr($arg, strlen('-ch='));
-    } elseif (str_starts_with($arg, '-cp=')) {
-        $chromaPort = substr($arg, strlen('-cp='));
     } elseif (($arg === '-h') || ($arg === '--help')) {
         $helpRequested = TRUE;
         print_usage();
@@ -53,22 +43,18 @@ if ($question === null) {
     exit(1);
 }
 
-$chromaHost ??= 'localhost';
-$chromaPort ??= '8000';
-$ollamaHost ??= 'localhost';
-$ollamaPort ??= '11434';
-$collectionName ??= 'usagovsite';
+$hostArgs = ChatbotServices::getArgs($argv);
 
 $cbs = new ChatbotServices(
-    collectionName: $collectionName,
-    chromaHost: $chromaHost,
-    chromaPort: $chromaPort,
-    ollamaHost: "$ollamaHost:$ollamaPort"
+    collectionName: $hostArgs['collectionName'],
+    chromaHost: $hostArgs['chromaHost'],
+    chromaPort: $hostArgs['chromaPort'],
+    ollamaHost: $hostArgs['ollamaHost'] . ':' . $hostArgs['ollamaPort']
 );
 
 $response = $cbs->askChat(
     query:$question,
-    collectionName:$collectionName,
+    collectionName:$hostArgs['collectionName'],
     toJSON:$toJSON
 );
 
