@@ -2,11 +2,11 @@
 
 ## Plan
 
- `terraform plan -var-file=gsa-tts.tfvars -out gsa-tts-20250404z_modified_restricted_ingress.plan`
+ `terraform plan -var-file=aws.tfvars -out aws-cbp.plan`
 
 ## Apply
 
-`terraform apply -var-file=gsa-tts.tfvars gsa-tts-20250404z_modified_restricted_ingress.plan`
+`terraform apply -var-file=aws.tfvars aws-cbp.plan`
 
 ## TODO
 

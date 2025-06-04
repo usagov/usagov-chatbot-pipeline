@@ -19,6 +19,9 @@ This folder contains PHP scripts and classes for interacting with the USAGov Cha
 - `cb-askchat.php`  
   Ask questions to the chatbot and get responses from a specified collection
 
+## Improvement Ideas
+1. Ability to refactor system prompt
+1. Ability to refactor embedding components
 
 ## Requirements
 
@@ -36,14 +39,20 @@ The [server](../server/) folder has a [docker-compose.yml](../server/docker-comp
 
 ## Dev Environment (or server) Setup
 
-1. PHP 8.2.x cli, xml and zip libraries
+1. PHP 8.2.x/8.3.x cli, xml and zip libraries
+   
+   There were issues noted early on, with this repo and PHP 8.4 - Development and testing were done on PHP 8.3.6
 
    ```sh
    cd php
    sudo apt install php-cli php-xml php-zip
    ```
 
-2. Install dependencies:
+2. Install composer:
+
+   See [Composer website](https://getcomposer.org/download/)
+   
+3. Install php dependencies:
    ```sh
    cd php
    composer install
@@ -71,8 +80,8 @@ The [server](../server/) folder has a [docker-compose.yml](../server/docker-comp
 
 6. Pull the models needed:
    ```
-   docker exec -t ollama pull nomic-embed-text
-   docker exec -t ollama pull llama3.2
+   docker exec -t ollama ollama pull nomic-embed-text
+   docker exec -t ollama ollama pull llama3.2
    ```
 
 ## Pipeline Script Usage
@@ -138,3 +147,60 @@ The [server](../server/) folder has a [docker-compose.yml](../server/docker-comp
    cb-askchat.php | cb-healthcheck.php | cb-create-embeddings.php:
    -c=<vector db collection name>   (defaults to `usagovsite`)
    ```
+## Pipeline script example output
+```
+### Make a query to a remote server running our LLM+VDB+proxy containers:
+
+❯ php cb-askchat.php -c=usagovsite2 -oh=ob.straypacket.com -op=80 -ch=cd.straypacket.com -cp=80 -q="Please tell me about all federal government auctions" -j | jq -r .completions.response
+[
+  {
+    "name": "General Services Administration (GSA) Auctions",
+    "description": "Auction for the sale of government surplus property and goods",
+    "telephone number": "(202) 273-0110",
+    "email": "gsc@gsa.gov",
+    "URL": "https://www.gsa.gov/service/government-surplus-procedure/gsa-auctions"
+  },
+  {
+    "name": "GovernmentAuction.com",
+    "description": "Online auction site for government auctions",
+    "telephone number": "(888) 382-5519",
+    "email": "",
+    "URL": "https://www.govauctions.net/"
+  },
+  {
+    "name": "Ibid Auction House",
+    "description": "Auction house specializing in government property auctions",
+    "telephone number": "(877) 222-3542",
+    "email": "",
+    "URL": "https://www.ibidauctions.com/"
+  },
+  {
+    "name": "GovernmentAuctioneers",
+    "description": "Online auction site for government auctions",
+    "telephone number": "(888) 382-5519",
+    "email": "",
+    "URL": "https://www.govauctions.net/"
+  },
+  {
+    "name": "Real Estate Auctions Inc.",
+    "description": "Auction company specializing in real estate auctions",
+    "telephone number": "(800) 466-4448",
+    "email": "",
+    "URL": "https://www.realestateauctions.com/"
+  },
+  {
+    "name": "US Marshals Service Auctions",
+    "description": "Auction site for seized property and government auctions",
+    "telephone number": "(877) 276-4828",
+    "email": "",
+    "URL": "https://www.usmarshals.gov/auctions"
+  },
+  {
+    "name": "Federal Property Auctions",
+    "description": "Online auction site for federal property auctions",
+    "telephone number": "(888) 382-5519",
+    "email": "",
+    "URL": "https://www.govauctions.net/"
+  }
+]
+```

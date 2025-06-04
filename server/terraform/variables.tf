@@ -23,32 +23,21 @@ variable "public_key" {
 
 variable "resource_prefix" {
   type = string
-  default = "straypacket"
-}
-
-variable "system_ami_ownerid" {
-  type = string
-  default = "621876497272"
+  default = "cbp"
 }
 
 #######################################
 
 ### Hard-code AMI ids for accounts where we do not have ec2:DescribeImages permission
-#   + custom_ami_id          = "ami-0ea6a58eec3a99944"
-#   + system_primary_details = (known after apply)
-#   + ubuntu_ami_id          = "ami-04f167a56786e4b09"
 variable "ubuntu_2404_ami_id" {
     type = string
     default = "ami-04f167a56786e4b09"
-}
-variable "custom_ami_id" {
-    type = string
-    default = "ami-0ea6a58eec3a99944"
+    ### ---> arm image id: default = "ami-0ae6f07ad3a8ef182"
 }
 
 variable "system_ami_id" {
   type = string
-  default = "ami-0c60ac3a665782b68"
+  default = "ami-04f167a56786e4b09"
 }
 
 # shared instances
@@ -83,7 +72,7 @@ variable "system_volume_size" {
 
 variable "vpc_name" {
   type    = string
-  default = "straypacket_vpc"
+  default = "cbp_vpc"
 }
 
 variable "vpc_cidr" {

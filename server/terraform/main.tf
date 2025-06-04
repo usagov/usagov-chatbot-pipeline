@@ -87,45 +87,9 @@ resource "aws_eip" "system_eip" {
   }
 }
 
-# Terraform Data Block - Ubuntu Server 24.04 LTS (HVM), SSD Volume Type, x86_64
-#data "aws_ami" "ubuntu_2404" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20250305"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["099720109477"] # Canonical
-#}
-
-# Terraform Data Block - Custom AMI v2, pre-installed requirements
-#data "aws_ami" "system_ami" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["${var.system_ami_name_primary}"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["${var.system_ami_ownerid}"] # straypacket
-#}
-
-
 # EC2 Primary instance in Public Subnet
 resource "aws_instance" "system_server_primary" {
   ami           = var.system_ami_id
-  #ami           = data.aws_ami.system_ami.id
   instance_type = "${var.system_instance_type_primary}"
 
   root_block_device {
@@ -137,7 +101,7 @@ resource "aws_instance" "system_server_primary" {
   subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
   vpc_security_group_ids = [aws_security_group.allow_standard.id,
                             aws_security_group.allow_llm.id,
-                            aws_security_group.allow_egress.id] # Associate the security groups
+                            aws_security_group.allow_egress.id]
   tags = {
     Name = "${var.resource_prefix}"
   }
@@ -169,8 +133,6 @@ resource "aws_vpc_security_group_egress_rule" "system-sec-group-egress" {
     cidr_ipv4 = "0.0.0.0/0"
 }
 
-
-
 resource "aws_security_group" "allow_standard" {
   name = "standard_inbound"
   description = "Allow inbound for http/s, ssh"
@@ -198,6 +160,7 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-http" {
     ip_protocol = "tcp"
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
+
 resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" {
     count = length(var.ingress_cidr_blocks)
     security_group_id = aws_security_group.allow_standard.id
@@ -206,6 +169,7 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-https" 
     ip_protocol = "tcp"
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
+
 resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ssh" {
     count = length(var.ingress_cidr_blocks)
     security_group_id = aws_security_group.allow_standard.id
@@ -223,45 +187,3 @@ resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-proxy-a
     ip_protocol = "tcp"
     cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
 }
-
-#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-chroma" {
-#    count = length(var.ingress_cidr_blocks)
-#    security_group_id = aws_security_group.allow_llm.id
-#    from_port = 8000
-#    to_port = 8000
-#    ip_protocol = "tcp"
-#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
-#}
-
-#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-ollama" {
-#    count = length(var.ingress_cidr_blocks)
-#    security_group_id = aws_security_group.allow_llm.id
-#    from_port = 11434
-#    to_port = 11434
-#    ip_protocol = "tcp"
-#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
-#}
-
-#resource "aws_vpc_security_group_ingress_rule" "system-sec-group-ingress-openweb" {
-#    count = length(var.ingress_cidr_blocks)
-#    security_group_id = aws_security_group.allow_llm.id
-#    from_port = 8080
-#    to_port = 8080
-#    ip_protocol = "tcp"
-#    cidr_ipv4 = var.ingress_cidr_blocks[count.index].cidr_block
-#}
-
-#resource "aws_ebs_volume" "system_volume_srv" {
-#  availability_zone = var.availability_zone
-#  size = 40 # Replace with your desired volume size in GB
-#  tags = {
-#    Name = "${var.resource_prefix} srv" # Optional: Add tags for identification
-#  }
-#}
-### once we know the proper device_name we can attach.
-### but we currently still need to manually format/mount
-#resource "aws_volume_attachment" "system_volume_srv_attachment" {
-#  volume_id  = aws_ebs_volume.system_volume_srv.id
-#  instance_id = aws_instance.system.id
-#  device_name = "/dev/xvdbg"
-#}
