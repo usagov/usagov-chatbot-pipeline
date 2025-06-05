@@ -31,39 +31,25 @@ variable "resource_prefix" {
 ### Hard-code AMI ids for accounts where we do not have ec2:DescribeImages permission
 variable "ubuntu_2404_ami_id" {
     type = string
-    default = "ami-04f167a56786e4b09"
-    ### ---> arm image id: default = "ami-0ae6f07ad3a8ef182"
+    #default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
+    default = "ami-0fb8a63da4a19607d"  ### arm64 image id
 }
 
 variable "system_ami_id" {
   type = string
-  default = "ami-04f167a56786e4b09"
+    #default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
+    default = "ami-0fb8a63da4a19607d"  ### arm64 image id
 }
 
-# shared instances
-#default = "t3a.xlarge"        ###  4/16/--- / Linux base: .1504/hr / NO GPU / --> way too slow
-#default = "c7i.4xlarge"       ### 16/32/--- / Linux base:  .714/hr / NO GPU / --> ok 18-32second queries
-#default = "c7a.8xlarge"       ### 32/64/--- / Linux base: 1.642/hr / NO GPU / --> faster :)
-#default = "c7i-flex.8xlarge"  ### 32/64/--- / Linux base: 1.357/hr / NO GPU /
-
-# dedicated instances
-#default = "c5d.4xlarge"  ### 16/32/200 / Linux base:  .768/hr / NO GPU /
-#default = "g4ad.4xlarge" ###  6/64/600 / Linux base:  .864/hr / 1x AMD GPU
-#default = "g4dn.2xlarge" ###  8/32/225 / Linux base:  .752/hr / 1x NVIDIA T4 GPU
-#default = "g4dn.4xlarge" ### 16/64/225 / Linux base:  .204/hr / 1x NVIDIA GPU
-#default = "g6.2xlarge"   ###  8/32/450 / Linux base:  .976/hr / 1x NVIDIA L4 GPU
-#default = "g6.4xlarge"   ### 16/64/600 / Linux base: 1.323/hr / 1x NVIDIA L4 GPU
 
 variable "system_instance_type_primary" {
   type = string
-  #default = "t3a.xlarge"
-  default = "c7i.4xlarge"
+  default = "c7g.2xlarge"
 }
 
 variable "system_instance_type_secondary" {
   type = string
-  #default = "t3a.xlarge"
-  default = "c7i.4xlarge"
+  default = "c7g.2xlarge"
 }
 variable "system_volume_size" {
   type = number
@@ -113,3 +99,24 @@ variable "ingress_cidr_blocks" {
     {cidr_block = "0.0.0.0/0"}
 ]
 }
+
+#
+# AWS Instance Type - info/pricing 6/04/25
+#
+# shared instances
+#x86/amd
+#default = "t3a.xlarge"        ###  4/16/--- / Linux base: .1504/hr / NO GPU / --> way too slow
+#default = "c7i.4xlarge"       ### 16/32/--- / Linux base:  .714/hr / NO GPU / --> ok 18-32second queries
+#default = "c7a.8xlarge"       ### 32/64/--- / Linux base: 1.642/hr / NO GPU / --> faster :)
+#default = "c7i-flex.8xlarge"  ### 32/64/--- / Linux base: 1.357/hr / NO GPU /
+#arm
+#default = "c7g.4xlarge"        ### 16/32/--- / Linux base:  .579/hr / NO GPU / --> ok 18-32second queries
+#default = "c7g.2xlarge"        ### 16/32/--- / Linux base:  .290/hr / NO GPU / --> ?? testing
+
+# dedicated instances
+#default = "c5d.4xlarge"  ### 16/32/200 / Linux base:  .768/hr / NO GPU /
+#default = "g4ad.4xlarge" ###  6/64/600 / Linux base:  .864/hr / 1x AMD GPU
+#default = "g4dn.2xlarge" ###  8/32/225 / Linux base:  .752/hr / 1x NVIDIA T4 GPU
+#default = "g4dn.4xlarge" ### 16/64/225 / Linux base:  .204/hr / 1x NVIDIA GPU
+#default = "g6.2xlarge"   ###  8/32/450 / Linux base:  .976/hr / 1x NVIDIA L4 GPU
+#default = "g6.4xlarge"   ### 16/64/600 / Linux base: 1.323/hr / 1x NVIDIA L4 GPU

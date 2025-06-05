@@ -13,10 +13,14 @@ class ChatbotServices {
   protected $inPath = __DIR__ . '/../input';
   protected $embeddingModel = 'nomic-embed-text:latest';
   protected $chatModel = 'llama3.2';
-  protected $chromaHost = 'http://localhost';
-  protected $chromaPort = 8000;
+//  protected $chromaHost = 'http://localhost';
+//  protected $chromaPort = 8000;
+  protected $chromaHost = 'https://cd.straypacket.com';
+  protected $chromaPort = 443;
 
-  protected $ollamaHost = 'http://localhost:11434';
+//  protected $ollamaHost = 'http://localhost:11434';
+  protected $ollamaHost = 'https://ob.straypacket.com';
+  protected $ollamaPort = 443;
   protected $collectionName = 'usagovsite';
   /**
    * Constructor for ChatbotServices.
@@ -29,6 +33,7 @@ class ChatbotServices {
    * @param string|null $chromaHost ChromaDB host URL.
    * @param int|null $chromaPort ChromaDB port number.
    * @param string|null $ollamaHost Ollama host URL.
+   * @param int|null $ollamaPort Ollama port number.
    * @param string|null $collectionName Name of the ChromaDB collection.
    * @throws \Exception If the output path is not writable or the input path is not a directory.
    * @throws \Exception If the input path does not exist or is not readable.
@@ -43,6 +48,7 @@ class ChatbotServices {
     $chromaHost = null,
     $chromaPort = null,
     $ollamaHost = null,
+    $ollamaPort = null,
     $collectionName = null
   ) {
     $this->outPath = $outPath ?? $this->outPath;
@@ -52,6 +58,7 @@ class ChatbotServices {
     $this->chromaHost = $chromaHost ?? $this->chromaHost;
     $this->chromaPort = $chromaPort ?? $this->chromaPort;
     $this->ollamaHost = $ollamaHost ?? $this->ollamaHost;
+    $this->ollamaPort = $ollamaPort ?? $this->ollamaPort;
     $this->collectionName = $collectionName ?? $this->collectionName;
 
     if ( $forceDirChecks ) {
@@ -175,12 +182,15 @@ class ChatbotServices {
       "{$query}. - Answer that question using ONLY the resources provided. " .
       "If the query is not in the form of a question, prefix the query with \"Tell me about \". " .
       $jsonInstructions .
-      "You must include the following information, if the information is present, about each resource: " .
-      "name, description, telephone number, email and URL. " .
+      "You must include the following information, about each resource: " .
+      "agency, bureau or department name, full description, telephone number, email and URL. It is important to include all relevant details." .
+
       "Please avoid saying things similar to 'not enough data' and 'there is no further information'. " .
       "Do not admit ignorance of other data, even if there is more data available, outside of the resources provided. " .
+
       "You must keep the answer factual, and avoid superlatives or unnecessary adjectives. " .
       "Do not provide any data, or make any suggestions unless it comes from the resources provided. " .
+
       "The resources to use in your answer are these: " .
       implode(', ', $relateddocs) . ".";
 
@@ -241,11 +251,12 @@ class ChatbotServices {
   }
 
   public static function getArgs( $argv) {
-    $ollamaHost = 'localhost';
-    $ollamaPort = '11434';
-    $chromaHost = 'localhost';
-    $chromaPort = '8000';
-    $collectionName = 'usagovsite';
+    $sthis = new ChatbotServices();
+    $ollamaHost = $sthis->ollamaHost;
+    $ollamaPort = $sthis->ollamaPort;
+    $chromaHost = $sthis->chromaHost;
+    $chromaPort = $sthis->chromaPort;
+    $collectionName = $sthis->collectionName;
 
     foreach ($argv as $arg) {
       if (str_starts_with($arg, '-oh=')) {

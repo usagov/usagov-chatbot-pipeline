@@ -1,3 +1,5 @@
+!**/README.md
+!**/.gitkeep
 
 # Any output from tokenizers, text extractors, web content
 **/*.html
@@ -7,19 +9,15 @@
 # Docker compose artifacts
 /server/services/*
 !/server/services/.gitkeep
-/proxy/services/*
-!/proxy/.env
-!/proxy/docker-compose.yml
-!/proxy/services/.gitkeep
 
 # Knowledgebase in and out files
-/output/*
-!/output/.gitkeep
-!/output/README.md
+#/output/*
+#!/output/.gitkeep
+#!/output/README.md
 
-/input/*
-!/input/.gitkeep
-!/input/README.md
+#/input/*
+#!/input/.gitkeep
+#!/input/README.md
 
 # Local .terraform directories
 **/.terraform/*
