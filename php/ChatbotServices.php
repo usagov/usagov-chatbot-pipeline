@@ -250,34 +250,80 @@ class ChatbotServices {
     return TRUE;
   }
 
-  public static function getArgs( $argv) {
-    $sthis = new ChatbotServices();
-    $ollamaHost = $sthis->ollamaHost;
-    $ollamaPort = $sthis->ollamaPort;
-    $chromaHost = $sthis->chromaHost;
-    $chromaPort = $sthis->chromaPort;
-    $collectionName = $sthis->collectionName;
-
-    foreach ($argv as $arg) {
-      if (str_starts_with($arg, '-oh=')) {
-        $ollamaHost = substr($arg, strlen('-oh='));
-      } elseif (str_starts_with($arg, '-op=')) {
-        $ollamaPort = substr($arg, strlen('-op='));
-      } elseif (str_starts_with($arg, '-ch=')) {
-        $chromaHost = substr($arg, strlen('-ch='));
-      } elseif (str_starts_with($arg, '-cp=')) {
-        $chromaPort = substr($arg, strlen('-cp='));
-      } elseif (str_starts_with($arg, '-c=')) {
-        $collectionName = substr($arg, strlen('-c='));
-      }
+  public static function getArgs($argv) {
+    // Load from .env file (lowest priority)
+    $envFile = __DIR__ . '/../.env';
+    $envVars = [];
+    if (file_exists($envFile)) {
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (strpos(trim($line), '#') === 0) continue;
+            [$key, $value] = array_map('trim', explode('=', $line, 2) + [null, null]);
+            if ($key && $value !== null) {
+                $envVars[$key] = $value;
+            }
+        }
     }
 
+    // Helper to get value by priority: argv > getenv > .env > default, with sanitization
+    $getValue = function($shortOpt, $envName, $default, $type = null) use ($argv, $envVars) {
+        // 1. Check argv
+        foreach ($argv as $arg) {
+            if (str_starts_with($arg, $shortOpt . '=')) {
+                $val = substr($arg, strlen($shortOpt . '='));
+                break;
+            }
+        }
+        // 2. Check process environment
+        if (!isset($val)) {
+            $envVal = getenv($envName);
+            if ($envVal !== false) {
+                $val = $envVal;
+            }
+        }
+        // 3. Check .env file
+        if (!isset($val) && isset($envVars[$envName])) {
+            $val = $envVars[$envName];
+        }
+        // 4. Default
+        if (!isset($val)) {
+            $val = $default;
+        }
+
+        // --- Sanitization ---
+        if ($type === 'port') {
+            // Valid TCP port: integer 1-65535
+            if (!is_numeric($val) || (int)$val < 1 || (int)$val > 65535) {
+                throw new \InvalidArgumentException("Invalid port for $envName: $val");
+            }
+            $val = (int)$val;
+        } elseif ($type === 'host') {
+            // Valid URL (http/https)
+            if (!filter_var($val, FILTER_VALIDATE_URL)) {
+                throw new \InvalidArgumentException("Invalid host URL for $envName: $val");
+            }
+        } elseif ($type === 'collection') {
+            // a-z, A-Z, 0-9, -, _, must start with letter or _
+            if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9\-_]*$/', $val)) {
+                throw new \InvalidArgumentException("Invalid collection name for $envName: $val");
+            }
+        }
+        return $val;
+    };
+
+    $sthis = new ChatbotServices();
+    $ollamaHost = $getValue('-oh', 'OLLAMA_HOST', $sthis->ollamaHost, 'host');
+    $ollamaPort = $getValue('-op', 'OLLAMA_PORT', $sthis->ollamaPort, 'port');
+    $chromaHost = $getValue('-ch', 'CHROMA_HOST', $sthis->chromaHost, 'host');
+    $chromaPort = $getValue('-cp', 'CHROMA_PORT', $sthis->chromaPort, 'port');
+    $collectionName = $getValue('-c', 'CHROMA_COLLECTION', $sthis->collectionName, 'collection');
+
     return [
-     'ollamaHost' => $ollamaHost,
-     'ollamaPort' => $ollamaPort,
-     'chromaHost' => $chromaHost,
-     'chromaPort' => $chromaPort,
-     'collectionName' => $collectionName,
+        'ollamaHost' => $ollamaHost,
+        'ollamaPort' => $ollamaPort,
+        'chromaHost' => $chromaHost,
+        'chromaPort' => $chromaPort,
+        'collectionName' => $collectionName,
     ];
   }
 }
