@@ -12,7 +12,7 @@ The pipeline includes an nginx proxy server, useful for serving Ollama and Chrom
 
 ## 2. LLM server side:
 ### [Backend Architecture](./doc/Architecture.md)
-### [Requirements](./doc/BackendRequirements)
+### [Requirements](./doc/BackendRequirements.md)
 
 ## 3. LLM client side:
 Implementations of chunking and embedding processes are available in PHP and Python
