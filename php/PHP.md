@@ -66,7 +66,7 @@ The [server](../server/) folder has a [docker-compose.yml](../server/docker-comp
 
 5. Start the containers
 
-   Note that you can shorted the startup and loading time, and save some disk space by commenting out the openweb-ui container from [docker-compose.yml](../server/docker-compose.yml) 
+   Note that you can shorten the startup and loading time, and save some disk space by commenting out the openweb-ui container from [docker-compose.yml](../server/docker-compose.yml), if you don't need to use it
 
    ```
    cd server
@@ -96,7 +96,7 @@ The [server](../server/) folder has a [docker-compose.yml](../server/docker-comp
    ### let us see what is there now
    ls ../output/l*.dat
    ```
-2. Chunk/embed the extracted text into the vector database.  This will take some time, depending on the hardware you are using to hose the LLM+VDB (7 minutes is not unusual for my local [i7+32GB+nvmeSSD on WSL2])
+2. Chunk/embed the extracted text into the vector database.  This will take some time, depending on the hardware you are using to host the LLM+VDB (7 minutes is not unusual for my local [i7+32GB+nvmeSSD on WSL2])
 
    ```
    php cb-create-embeddings.php
