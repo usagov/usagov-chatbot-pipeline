@@ -46,7 +46,8 @@ class ChatbotServices {
     $chromaPort = null,
     $ollamaHost = null,
     $ollamaPort = null,
-    $collectionName = null
+    $collectionName = null,
+    $initConnections = TRUE
   ) {
     $this->outPath = $outPath ?? $this->outPath;
     $this->inPath = $inPath ?? $this->inPath;
@@ -69,19 +70,21 @@ class ChatbotServices {
     }
 
     // Initialize ChromaDB and Ollama clients
-    try {
-      $this->chroma = ChromaDB::factory()
-        ->withHost($this->chromaHost)
-        ->withPort($this->chromaPort)
-        ->connect();
-    } catch (\Exception $e) {
-      throw new \Exception("Failed to initialize ChromaDB client: " . $e->getMessage());
-    }
+    if ( $initConnections)  {
+      try {
+        $this->chroma = ChromaDB::factory()
+          ->withHost($this->chromaHost)
+          ->withPort($this->chromaPort)
+          ->connect();
+      } catch (\Exception $e) {
+        throw new \Exception("Failed to initialize ChromaDB client: " . $e->getMessage());
+      }
 
-    try {
-      $this->ollama = Ollama::client($this->ollamaHost . ':' . $this->ollamaPort);
-    } catch (\Exception $e) {
-      throw new \Exception("Failed to initialize Ollama client: " . $e->getMessage());
+      try {
+        $this->ollama = Ollama::client($this->ollamaHost . ':' . $this->ollamaPort);
+      } catch (\Exception $e) {
+        throw new \Exception("Failed to initialize Ollama client: " . $e->getMessage());
+      }
     }
   }
 
@@ -263,11 +266,14 @@ class ChatbotServices {
     }
 
     // Helper to get value by priority: argv > getenv > .env > default, with sanitization
-    $getValue = function($shortOpt, $envName, $default, $type = null) use ($argv, $envVars) {
+    $getValue = function($shortOpt, $envName, $default, $type = null, $trace=false) use ($argv, $envVars) {
         // 1. Check argv
         foreach ($argv as $arg) {
             if (str_starts_with($arg, $shortOpt . '=')) {
                 $val = substr($arg, strlen($shortOpt . '='));
+                if ($trace) {
+                    print(json_encode(["$envName","Using value from command line: $val\n"]));
+                }
                 break;
             }
         }
@@ -276,15 +282,24 @@ class ChatbotServices {
             $envVal = getenv($envName);
             if ($envVal !== false) {
                 $val = $envVal;
+                if ($trace) {
+                    print(json_encode(["$envName","Using value from environment: $val\n"]));
+                }
             }
         }
         // 3. Check .env file
         if (!isset($val) && isset($envVars[$envName])) {
             $val = $envVars[$envName];
+            if ($trace) {
+                print(json_encode(["$envName","Using value from .env file: $val\n"]));
+            }
         }
         // 4. Default
         if (!isset($val)) {
             $val = $default;
+            if ($trace) {
+                print(json_encode(["$envName","Using default value: $val\n"]));
+            }
         }
 
         // --- Sanitization ---
@@ -308,7 +323,7 @@ class ChatbotServices {
         return $val;
     };
 
-    $sthis = new ChatbotServices();
+    $sthis = new ChatbotServices(initConnections: FALSE);
     $ollamaHost = $getValue('-oh', 'OLLAMA_HOST', $sthis->ollamaHost, 'host');
     $ollamaPort = $getValue('-op', 'OLLAMA_PORT', $sthis->ollamaPort, 'port');
     $chromaHost = $getValue('-ch', 'CHROMA_HOST', $sthis->chromaHost, 'host');
