@@ -82,7 +82,7 @@ class ChatbotServices {
     }
 
     try {
-      $this->ollama = Ollama::client($this->ollamaHost);
+      $this->ollama = Ollama::client($this->ollamaHost . ':' . $this->ollamaPort);
     } catch (\Exception $e) {
       throw new \Exception("Failed to initialize Ollama client: " . $e->getMessage());
     }
@@ -212,7 +212,7 @@ class ChatbotServices {
   
     $collectionName = $collectionName ?? $this->collectionName;
     $embeddingFunction = new OllamaEmbeddingFunction(
-      baseUrl: $this->ollamaHost,
+      baseUrl: $this-> ollamaHost . ':' . $this->ollamaPort,
       model: $this->embeddingModel
     );
 

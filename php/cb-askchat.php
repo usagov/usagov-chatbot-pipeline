@@ -49,7 +49,8 @@ $cbs = new ChatbotServices(
     collectionName: $hostArgs['collectionName'],
     chromaHost: $hostArgs['chromaHost'],
     chromaPort: $hostArgs['chromaPort'],
-    ollamaHost: $hostArgs['ollamaHost'] . ':' . $hostArgs['ollamaPort']
+    ollamaHost: $hostArgs['ollamaHost'],
+    ollamaPort: $hostArgs['ollamaPort']
 );
 
 $response = $cbs->askChat(
