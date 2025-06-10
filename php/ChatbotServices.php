@@ -252,7 +252,7 @@ class ChatbotServices {
 
   public static function getArgs($argv) {
     // Load from .env file (lowest priority)
-    $envFile = __DIR__ . '/../.env';
+    $envFile = __DIR__ . '/.env';
     $envVars = [];
     if (file_exists($envFile)) {
         $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
