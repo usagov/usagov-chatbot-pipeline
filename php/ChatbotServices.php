@@ -13,14 +13,11 @@ class ChatbotServices {
   protected $inPath = __DIR__ . '/../input';
   protected $embeddingModel = 'nomic-embed-text:latest';
   protected $chatModel = 'llama3.2';
-//  protected $chromaHost = 'http://localhost';
-//  protected $chromaPort = 8000;
-  protected $chromaHost = 'https://cd.straypacket.com';
-  protected $chromaPort = 443;
+  protected $chromaHost = 'http://localhost';
+  protected $chromaPort = 8000;
 
-//  protected $ollamaHost = 'http://localhost:11434';
-  protected $ollamaHost = 'https://ob.straypacket.com';
-  protected $ollamaPort = 443;
+  protected $ollamaHost = 'http://localhost';
+  protected $ollamaPort = 11434;
   protected $collectionName = 'usagovsite';
   /**
    * Constructor for ChatbotServices.
