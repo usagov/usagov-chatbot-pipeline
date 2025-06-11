@@ -250,7 +250,7 @@ class ChatbotServices {
     return TRUE;
   }
 
-  public static function getArgs($argv) {
+  public static function getArgs($argv,$trace=null) {
     // Load from .env file (lowest priority)
     $envFile = __DIR__ . '/.env';
     $envVars = [];
@@ -266,7 +266,7 @@ class ChatbotServices {
     }
 
     // Helper to get value by priority: argv > getenv > .env > default, with sanitization
-    $getValue = function($shortOpt, $envName, $default, $type = null, $trace=false) use ($argv, $envVars) {
+    $getValue = function($shortOpt, $envName, $default, $type = null ) use ($argv, $envVars, $trace) {
         // 1. Check argv
         foreach ($argv as $arg) {
             if (str_starts_with($arg, $shortOpt . '=')) {
@@ -324,11 +324,11 @@ class ChatbotServices {
     };
 
     $sthis = new ChatbotServices(initConnections: FALSE);
-    $ollamaHost = $getValue('-oh', 'OLLAMA_HOST', $sthis->ollamaHost, 'host');
-    $ollamaPort = $getValue('-op', 'OLLAMA_PORT', $sthis->ollamaPort, 'port');
-    $chromaHost = $getValue('-ch', 'CHROMA_HOST', $sthis->chromaHost, 'host');
-    $chromaPort = $getValue('-cp', 'CHROMA_PORT', $sthis->chromaPort, 'port');
-    $collectionName = $getValue('-c', 'CHROMA_COLLECTION', $sthis->collectionName, 'collection');
+    $ollamaHost = $getValue('-oh', 'OLLAMA_HOST', $sthis->ollamaHost, 'host', $trace);
+    $ollamaPort = $getValue('-op', 'OLLAMA_PORT', $sthis->ollamaPort, 'port', $trace);
+    $chromaHost = $getValue('-ch', 'CHROMA_HOST', $sthis->chromaHost, 'host', $trace);
+    $chromaPort = $getValue('-cp', 'CHROMA_PORT', $sthis->chromaPort, 'port', $trace);
+    $collectionName = $getValue('-c', 'CHROMA_COLLECTION', $sthis->collectionName, 'collection', $trace);
 
     return [
         'ollamaHost' => $ollamaHost,
