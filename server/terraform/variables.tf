@@ -38,18 +38,19 @@ variable "ubuntu_2404_ami_id" {
 variable "system_ami_id" {
   type = string
     #default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
-    default = "ami-0fb8a63da4a19607d"  ### arm64 image id
+    #default = "ami-0fb8a63da4a19607d"  ### arm64 image id
+    default = "ami-05f8516084fca8e19" ### preconfigured arm64 image id
 }
 
 
 variable "system_instance_type_primary" {
   type = string
-  default = "c7g.2xlarge"
+  default = "c7g.4xlarge"
 }
 
 variable "system_instance_type_secondary" {
   type = string
-  default = "c7g.2xlarge"
+  default = "c7g.4xlarge"
 }
 variable "system_volume_size" {
   type = number
