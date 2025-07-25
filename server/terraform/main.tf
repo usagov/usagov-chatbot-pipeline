@@ -2,7 +2,7 @@
 data "aws_region" "current" {}
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
+  key_name   = "cbp-key"
   public_key = var.public_key
 }
 

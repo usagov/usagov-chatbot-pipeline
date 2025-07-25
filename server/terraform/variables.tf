@@ -31,26 +31,26 @@ variable "resource_prefix" {
 ### Hard-code AMI ids for accounts where we do not have ec2:DescribeImages permission
 variable "ubuntu_2404_ami_id" {
     type = string
-    #default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
-    default = "ami-0fb8a63da4a19607d"  ### arm64 image id
+    default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
+    #default = "ami-0fb8a63da4a19607d"  ### arm64 image id
 }
 
 variable "system_ami_id" {
   type = string
-    #default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
-    default = "ami-0fb8a63da4a19607d"  ### arm64 image id
+    default = "ami-04f167a56786e4b09" ### x86/amd/64 image id
+    #default = "ami-0fb8a63da4a19607d"  ### arm64 image id
 }
-
 
 variable "system_instance_type_primary" {
   type = string
-  default = "c7g.2xlarge"
+  default = "c7i.4xlarge"
 }
 
 variable "system_instance_type_secondary" {
   type = string
-  default = "c7g.2xlarge"
+  default = "c7i.4xlarge"
 }
+
 variable "system_volume_size" {
   type = number
   default = 50

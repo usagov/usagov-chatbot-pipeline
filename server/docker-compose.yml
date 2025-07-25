@@ -31,7 +31,7 @@ services:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
     networks:
-      - proxy-net
+      - gsa-gov
 
   chroma:
 #    image: chromadb/chroma:1.0.8
@@ -45,10 +45,11 @@ services:
     environment:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
+#      CHROMA_SERVER_CORS_ALLOW_ORIGINS: "http://localhost:80"
     depends_on:
       - ollama
     networks:
-      - proxy-net
+      - gsa-gov
 
   openweb:
     image: ghcr.io/open-webui/open-webui:git-de0f52b-ollama
@@ -66,7 +67,7 @@ services:
     depends_on:
       - ollama
     networks:
-      - proxy-net
+      - gsa-gov
 
 networks:
-  proxy-net:
+  gsa-gov:
