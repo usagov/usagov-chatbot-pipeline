@@ -16,10 +16,10 @@ services:
       - chroma
       - openweb
     networks:
-      - proxy-net
+      - gsa-gov
 
   ollama:
-    image: ollama/ollama:0.8.0
+    image: ollama/ollama:0.11.0
     container_name: ollama
     restart: unless-stopped
     volumes:
@@ -30,12 +30,12 @@ services:
     environment:
       VIRTUAL_HOST:  ${OLLAMA_HOSTNAME}
       WEB_PORTS: "${OLLAMA_HOSTPORT}"
+      OLLAMA_ORIGINS: "*"
     networks:
       - gsa-gov
 
   chroma:
-#    image: chromadb/chroma:1.0.8
-    image: chromadb/chroma:0.6.2
+    image: chromadb/chroma:1.0.15
     container_name: chroma
     restart: unless-stopped
     volumes:
@@ -45,7 +45,7 @@ services:
     environment:
       VIRTUAL_HOST:  ${CHROMA_HOSTNAME}
       WEB_PORTS: ${CHROMA_HOSTPORT}
-#      CHROMA_SERVER_CORS_ALLOW_ORIGINS: "http://localhost:80"
+#      #CHROMA_SERVER_CORS_ALLOW_ORIGINS: "*"
     depends_on:
       - ollama
     networks:

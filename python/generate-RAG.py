@@ -1,6 +1,10 @@
 # pylint: disable=missing-module-docstring, invalid-name, wrong-import-position, line-too-long
-import os
+
+# these three lines swap the stdlib sqlite3 lib with the pysqlite3 package
+__import__('pysqlite3')
 import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import os
 import chromadb
 import ollama
 
@@ -39,4 +43,3 @@ prompt = (
 ragoutput = oc.generate(model="llama3.2", prompt=prompt, stream=False, options={"temperature": 0})
 print(f"Answered using only data from USAgov site pages:\n{ragoutput['response']}")
 print("\n")
-

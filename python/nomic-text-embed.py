@@ -1,9 +1,15 @@
 # pylint: disable=missing-module-docstring, missing-function-docstring, invalid-name, wrong-import-position, line-too-long
+
+# these three lines swap the stdlib sqlite3 lib with the pysqlite3 package
+__import__('pysqlite3')
 import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import os
 import re
 from ollama import embed
 import chromadb
+from chromadb.utils.embedding_functions import OllamaEmbeddingFunction 
 
 def readtextfiles(path):
     text_contents = {}
@@ -43,22 +49,23 @@ def chunksplitter(local_text, chunk_size=100):
 
 
 def getembedding(local_chunks):
-    local_embeds = embed(model="nomic-embed-text", input=local_chunks)
-    return local_embeds.get('embeddings', [])
-
+    ollama_ef = OllamaEmbeddingFunction("https://ob.straypacket.com", "nomic-embed-text")
+    texts = local_chunks
+    embeddings = ollama_ef(texts)
+    return embeddings
 
 ollama_host = os.environ.get("OLLAMA_HOST")
-if ollama_host != "https://ob.straypacket.com:443":
+if ollama_host != "https://ob.straypacket.com":
     print("\n")
-    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com:443'")
+    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com'")
     print("\n")
     print("---")
     sys.exit()
 
 chroma_host = os.environ.get("CHROMA_HOST", "cd.straypacket.com")
 chroma_port = os.environ.get("CHROMA_PORT", "443")
-chroma_ssl  = os.environ.get("CHROMA_SSL", True )
-chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port,ssl=chroma_ssl)
+chroma_ssl  = os.environ.get("CHROMA_SSL", True)
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port, ssl=chroma_ssl)
 
 textdocspath = "../output"
 text_data = readtextfiles(textdocspath)
