@@ -1,4 +1,0 @@
-bucket  = "pk.straypacket.com"
-region  = "us-east-2"
-profile = "straypacket"
-key     = "tf/my.terraform.tfstate"

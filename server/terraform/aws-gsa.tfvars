@@ -1,0 +1,3 @@
+aws_profile = "gsa"
+aws_region = "us-east-2"
+public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1gyJo/SA51oEU27tLcJA3R4O63eQE90ugn/gA2qZnU30TeKgKsTCtRnuaK4Z93vMTtmUP8EeKdonamMmUTWEuzc8kdC/xzy4J+w2BOHtIMw0fILxtKVXj3B8CE1jkHPF0sIy5Pz2iS9YbTeDnSnNGavpWJ7WSZPspf+bS7tgsvr+f6nH8tliHfExIdlMsQT+G66h4I1fhITg3SbtkJOzczzk2fynVYQOGtS+g6csI1TNiVIGaw8/yhoPHhvEQX3SxwonncbFJUwbP+BWaOrNeUOl5qj0NI4emPJ3tTFQvNz3so0N/M8TV17ju7LfoFsD1S5EyLn5rkQPEqG7gWmv1"

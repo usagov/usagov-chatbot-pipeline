@@ -8,11 +8,11 @@ import os
 import chromadb
 import ollama
 
-ollama_host = os.environ.get("OLLAMA_HOST","http://127.0.0.1:11434")
-chroma_host = os.environ.get("CHROMA_HOST","127.0.0.1")
-chroma_port = os.environ.get("CHROMA_PORT","8000")
+ollama_host = os.environ.get("OLLAMA_HOST","https://ob2.straypacket.com:443")
+chroma_host = os.environ.get("CHROMA_HOST","cd2.straypacket.com")
+chroma_port = os.environ.get("CHROMA_PORT","443")
 
-chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port)
+chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port, ssl=True)
 
 collection = chromaclient.get_or_create_collection(name="usagovsite")
 

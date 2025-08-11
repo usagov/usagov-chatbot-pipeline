@@ -49,20 +49,20 @@ def chunksplitter(local_text, chunk_size=100):
 
 
 def getembedding(local_chunks):
-    ollama_ef = OllamaEmbeddingFunction("https://ob.straypacket.com", "nomic-embed-text")
+    ollama_ef = OllamaEmbeddingFunction("https://ob2.straypacket.com", "nomic-embed-text")
     texts = local_chunks
     embeddings = ollama_ef(texts)
     return embeddings
 
 ollama_host = os.environ.get("OLLAMA_HOST")
-if ollama_host != "https://ob.straypacket.com":
+if ollama_host != "https://ob2.straypacket.com":
     print("\n")
-    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob.straypacket.com'")
+    print("OLLAMA_HOST not set. Please export OLLAMA_HOST='https://ob2.straypacket.com'")
     print("\n")
     print("---")
     sys.exit()
 
-chroma_host = os.environ.get("CHROMA_HOST", "cd.straypacket.com")
+chroma_host = os.environ.get("CHROMA_HOST", "cd2.straypacket.com")
 chroma_port = os.environ.get("CHROMA_PORT", "443")
 chroma_ssl  = os.environ.get("CHROMA_SSL", True)
 chromaclient = chromadb.HttpClient(host=chroma_host, port=chroma_port, ssl=chroma_ssl)

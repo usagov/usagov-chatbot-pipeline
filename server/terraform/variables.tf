@@ -43,12 +43,14 @@ variable "system_ami_id" {
 
 variable "system_instance_type_primary" {
   type = string
-  default = "c7i.4xlarge"
+  #default = "c7i.4xlarge"
+  default = "c7i.8xlarge"
 }
 
 variable "system_instance_type_secondary" {
   type = string
-  default = "c7i.4xlarge"
+  #default = "c7i.4xlarge"
+  default = "c7i.8xlarge"
 }
 
 variable "system_volume_size" {
@@ -96,8 +98,21 @@ variable "ingress_cidr_blocks" {
     cidr_block = string
   }))
   default = [
-    {cidr_block = "0.0.0.0/0"}
-]
+    { cidr_block = "159.142.0.0/16" },
+    { cidr_block = "136.226.4.0/23" },
+    { cidr_block = "136.226.6.0/23" },
+    { cidr_block = "136.226.8.0/23" },
+    { cidr_block = "136.226.10.0/23" },
+    { cidr_block = "136.226.12.0/23" },
+    { cidr_block = "136.226.14.0/23" },
+    { cidr_block = "136.226.16.0/23" },
+    { cidr_block = "136.226.18.0/23" },
+    { cidr_block = "136.226.20.0/23" },
+    { cidr_block = "136.226.22.0/24" },
+    { cidr_block = "165.225.3.0/24" },
+    { cidr_block = "165.225.46.0/24" },
+    { cidr_block = "165.225.48.0/24" }
+  ]
 }
 
 #

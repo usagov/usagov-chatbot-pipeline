@@ -100,7 +100,6 @@ resource "aws_instance" "system_server_primary" {
   key_name      = aws_key_pair.deployer.key_name
   subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
   vpc_security_group_ids = [aws_security_group.allow_standard.id,
-                            aws_security_group.allow_llm.id,
                             aws_security_group.allow_egress.id]
   tags = {
     Name = "${var.resource_prefix}"
@@ -140,15 +139,6 @@ resource "aws_security_group" "allow_standard" {
   tags = {
     Name = "allow_standard"
     Purpose = "Standard Port Access"
-  }
-}
-
-resource "aws_security_group" "allow_llm" {
-  name        = "allow_llm"
-  description = "Allows LLM traffic"
-  vpc_id = aws_vpc.vpc.id
-  tags = {
-    Name = "allow_llm"
   }
 }
 

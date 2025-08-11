@@ -1,0 +1,4 @@
+bucket  = "gsa-tts-usagov-cbproto-tf-state"
+region  = "us-east-2"
+profile = "gsa"
+key     = "tf/my.terraform.tfstate"
