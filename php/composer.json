@@ -19,10 +19,14 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/CodeWithKyrian/chromadb-php/"
         }
     ],
     "require": {
-        "codewithkyrian/chromadb-php": "^0.4",
+        "codewithkyrian/chromadb-php": "dev-main",
         "symfony/var-dumper": "^6.3",
         "ardagnsrn/ollama-php": "^1.0"
     }

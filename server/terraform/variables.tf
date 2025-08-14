@@ -98,6 +98,8 @@ variable "ingress_cidr_blocks" {
     cidr_block = string
   }))
   default = [
+    # GSA IPv4 blocks and addresses:
+    { cidr_block = "98.97.154.43/32" },
     { cidr_block = "159.142.0.0/16" },
     { cidr_block = "136.226.4.0/23" },
     { cidr_block = "136.226.6.0/23" },
@@ -111,9 +113,46 @@ variable "ingress_cidr_blocks" {
     { cidr_block = "136.226.22.0/24" },
     { cidr_block = "165.225.3.0/24" },
     { cidr_block = "165.225.46.0/24" },
-    { cidr_block = "165.225.48.0/24" }
+    { cidr_block = "165.225.48.0/24" },
   ]
 }
+
+# variable "ingress_cidr6_blocks" {
+#   description = "List of CIDR blocks for ingress traffic (IPv6)"
+#   type = list(object({
+#     cidr_block = string
+#   }))
+#   default = [
+#     # GSA IPv6 blocks and addresses:
+#     { cidr_block = "2607:6540:2000:800::/64" },
+#     { cidr_block = "2607:6540:2700:800::/64" },
+#     { cidr_block = "2620:0:150:3447:5d77:841e:bc01:5bf4/128" },
+#     { cidr_block = "2620:0:150:3447:8fca:87e5:da51:4b7b/128" },
+#     { cidr_block = "2620:0:150:3447:daad:6c9f:fb78:b689/128" },
+#     { cidr_block = "2620:0:150:3447:faf0:b47d:a67d:5bad/128" },
+#     { cidr_block = "2620:0:150:3447:6df7:3fdc:64b4:1b83/128" },
+#     { cidr_block = "2620:0:150:3447:1196:7f61:5aab:fd8f/128" },
+#     { cidr_block = "2620:0:150:3447:2f92:e6a1:efaa:fb98/128" },
+#     { cidr_block = "2620:0:150:3447:2772:3f17:a0eb:8566/128" },
+#     { cidr_block = "2620:0:150:4029:896d:2ddc:8450:efe9/128" },
+#     { cidr_block = "2620:0:150:4029:de4b:dd85:31cc:6f55/128" },
+#     { cidr_block = "2620:0:150:4029:a5df:d6e0:fc6c:e16b/128" },
+#     { cidr_block = "2620:0:150:4029:da15:7695:c137:7767/128" },
+#     { cidr_block = "2620:0:150:4029:a5bc:cc3f:55f9:6458/128" },
+#     { cidr_block = "2620:0:150:4029:b8c7:f0d0:941e:de07/128" },
+#     { cidr_block = "2620:0:150:4029:c9cc:5ce:ec04:eb30/128" },
+#     { cidr_block = "2620:0:150:4029:f30c:dc1f:6722:b47b/128" },
+
+#     # ZScaler "edge" addresses; sometimes GSA linux clients come through on these
+#     { cidr_block = "2605:4300:1511::/48" },
+#     { cidr_block = "2605:4300:1512::/48" },
+#     { cidr_block = "2605:4300:1611::/48" },
+#     { cidr_block = "2605:4300:1612::/48" },
+#     { cidr_block = "2605:4300:1711::/48" },
+#     { cidr_block = "2605:4300:2c11::/48" },
+#     { cidr_block = "2605:4300:2c12::/48" },
+#   ]
+# }
 
 #
 # AWS Instance Type - info/pricing 6/04/25
